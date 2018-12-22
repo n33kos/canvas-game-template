@@ -1,3 +1,5 @@
+import * as defaultConfig from 'const/defaultConfig';
+
 export default class {
   constructor() {
     this.audioContext = null;
@@ -5,9 +7,10 @@ export default class {
     this.ctx = null;
     this.deltaTime = 1;
     this.isPaused = false;
-    this.level = 0;
+    this.level = null;
     this.levels = [];
     this.score = 0;
+    this.playerName = defaultConfig.playerName;
 
     /*
       Class variables added in loader :
