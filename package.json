@@ -5,10 +5,11 @@
   "description": "A template for newGame",
   "main": "dist/js/newGame.min.js",
   "scripts": {
-    "build": "webpack && npm run styles",
-    "styles": "npm run scss && npm run cssprefix",
+    "deploy": "webpack && npm run styles",
+    "build": "webpack",
+    "styles": "npm run scss && npm run autoprefix",
     "scss": "sass --no-source-map ./src/scss/styles.scss ./dist/styles/styles_temp.css",
-    "cssprefix": "npx postcss ./dist/styles/styles_temp.css > ./dist/styles/styles.css && rm ./dist/styles/styles_temp.css",
+    "autoprefix": "npx postcss ./dist/styles/styles_temp.css > ./dist/styles/styles.css && rm ./dist/styles/styles_temp.css",
     "serve": "http-server",
     "watch": "npm-watch"
   },
@@ -16,8 +17,17 @@
   "license": "MIT",
   "watch": {
     "build": {
-      "patterns": ["src"],
-      "extensions": ["js", "scss"],
+      "patterns": [
+        "src"
+      ],
+      "extensions": "js",
+      "quiet": true
+    },
+    "styles": {
+      "patterns": [
+        "src/scss"
+      ],
+      "extensions": "scss",
       "quiet": true
     }
   },
@@ -34,6 +44,7 @@
     "sass": "^1.15.2",
     "throttle-debounce": "^2.0.1",
     "uglifyjs-webpack-plugin": "^2.1.0",
+    "uuid": "^3.3.2",
     "webpack": "^4.12.0",
     "webpack-cli": "^3.0.3"
   },

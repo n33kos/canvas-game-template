@@ -1,8 +1,8 @@
 import { throttle } from 'throttle-debounce';
 
 export default class {
-  constructor(Game) {
-    this.Game = Game;
+  constructor(GameState) {
+    this.GameState = GameState;
     this.isMouseDown = false;
     this.oldPosition = 0;
     this.pressedKeys = [];
@@ -32,7 +32,7 @@ export default class {
 
   handleTouchMove(e) {
     e.preventDefault();
-    if (!this.isMouseDown || this.Game.isPaused) return;
+    if (!this.isMouseDown || this.GameState.isPaused) return;
 
     for (let i=0; i < e.targetTouches.length; i++) {
       // Do something here with position
@@ -46,7 +46,7 @@ export default class {
   }
 
   handleMouseMove(e) {
-    if (!this.isMouseDown || this.Game.isPaused) return;
+    if (!this.isMouseDown || this.GameState.isPaused) return;
 
     // Do something here with position
     this.oldPosition = e.clientX;

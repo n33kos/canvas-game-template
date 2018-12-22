@@ -23,17 +23,17 @@ export default class {
   initListenters() {
     // Play buttons
     Array.from(this.buttons.play).forEach(button => {
-      button.addEventListener('click', () => this.GameState.Game.play() );
+      button.addEventListener('click', () => this.GameState.play() );
     });
 
     // Pause buttons
     Array.from(this.buttons.pause).forEach(button => {
-      button.addEventListener('click', () => this.GameState.Game.togglePause() );
+      button.addEventListener('click', () => this.GameState.togglePause() );
     });
 
     // Restart Buttons
     Array.from(this.buttons.restart).forEach(button => {
-      button.addEventListener('click', () => this.GameState.Game.restart() );
+      button.addEventListener('click', () => this.GameState.restart() );
     });
 
     //Fullscreen buttons
@@ -45,10 +45,10 @@ export default class {
     Array.from(this.buttons.level).forEach(button => {
       button.addEventListener('click', (e) => {
         this.GameState.level += parseInt(e.target.dataset.gamestateChangeLevel, 10);
-        if (this.GameState.level >= this.GameState.Game.levels.length) this.GameState.level = 0;
-        if (this.GameState.level < 0) this.GameState.level = this.GameState.Game.levels.length;
+        if (this.GameState.level >= this.GameState.levels.length) this.GameState.level = 0;
+        if (this.GameState.level < 0) this.GameState.level = this.GameState.levels.length;
 
-        this.updateLevel(this.GameState.Game.levels[this.GameState.level]);
+        this.updateLevel(this.GameState.levels[this.GameState.level]);
       });
     });
 
@@ -61,7 +61,7 @@ export default class {
     Array.from(this.buttons.mute).forEach(button => {
       button.addEventListener('click', (e) => {
 
-        const audioCtx = this.GameState.Game.audioContext;
+        const audioCtx = this.GameState.Audio.audioContext;
 
         if(audioCtx.state === 'running') {
           audioCtx.suspend().then(function() {
@@ -135,6 +135,8 @@ export default class {
   }
 
   updateLevel(level) {
+    if (!level) return;
+
     Array.from(document.querySelectorAll('[data-ui="level"]')).forEach(levelElement => {
       levelElement.innerHTML = level.name;
     });

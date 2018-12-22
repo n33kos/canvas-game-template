@@ -1,4 +1,4 @@
-import Level from 'Level/index';
+import Level from 'class/Level';
 
 export default () => {
   const level = new Level();
