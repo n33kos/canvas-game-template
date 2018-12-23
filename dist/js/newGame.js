@@ -259,7 +259,7 @@ var _Scene = __webpack_require__(8);
 
 var _Scene2 = _interopRequireDefault(_Scene);
 
-var _UI = __webpack_require__(14);
+var _UI = __webpack_require__(12);
 
 var _UI2 = _interopRequireDefault(_UI);
 
@@ -378,9 +378,9 @@ var _class = function () {
   }, {
     key: 'setDimensions',
     value: function setDimensions() {
-      this.width = window.innerWidth || document.documentElement.clientWidth || document.body.clientWidth;
+      this.width = (window.innerWidth || document.documentElement.clientWidth || document.body.clientWidth) * window.devicePixelRatio;
 
-      this.height = window.innerHeight || document.documentElement.clientHeight || document.body.clientHeight;
+      this.height = (window.innerHeight || document.documentElement.clientHeight || document.body.clientHeight) * window.devicePixelRatio;
     }
   }, {
     key: 'initCanvas',
@@ -399,7 +399,7 @@ var _class = function () {
 
       this.resizeCanvas();
 
-      window.addEventListener('resize', (0, _throttleDebounce.throttle)(200, function () {
+      window.addEventListener('resize', (0, _throttleDebounce.throttle)(1000, function () {
         _this.setDimensions();
         _this.resizeCanvas();
       }));
@@ -733,21 +733,15 @@ Object.defineProperty(exports, "__esModule", {
 
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
-var _Entity = __webpack_require__(9);
-
-var _Entity2 = _interopRequireDefault(_Entity);
-
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
-var uuidv4 = __webpack_require__(11);
+var uuidv4 = __webpack_require__(9);
 
 var _class = function () {
   function _class(GameState) {
     _classCallCheck(this, _class);
 
-    this.Gamestate = GameState;
+    this.GameState = GameState;
     this.entities = [];
   }
 
@@ -788,92 +782,8 @@ exports.default = _class;
 "use strict";
 
 
-Object.defineProperty(exports, "__esModule", {
-  value: true
-});
-
-var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
-
-var _Vector = __webpack_require__(10);
-
-var _Vector2 = _interopRequireDefault(_Vector);
-
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
-
-var _class = function () {
-  function _class(GameState) {
-    _classCallCheck(this, _class);
-
-    this.Gamestate = GameState;
-    this.position = new _Vector2.default();
-  }
-
-  _createClass(_class, [{
-    key: 'init',
-    value: function init() {
-      // Nothing here yet
-    }
-  }, {
-    key: 'draw',
-    value: function draw(ctx) {
-      // Nothing here yet
-    }
-  }]);
-
-  return _class;
-}();
-
-exports.default = _class;
-
-/***/ }),
-/* 10 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-
-Object.defineProperty(exports, "__esModule", {
-  value: true
-});
-
-var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
-
-function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
-
-var _class = function () {
-  function _class() {
-    var x = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : 0;
-    var y = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : 0;
-
-    _classCallCheck(this, _class);
-
-    this.x = x;
-    this.y = y;
-  }
-
-  _createClass(_class, [{
-    key: "toArray",
-    value: function toArray() {
-      return [this.x, this.y];
-    }
-  }]);
-
-  return _class;
-}();
-
-exports.default = _class;
-
-/***/ }),
-/* 11 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-
-var rng = __webpack_require__(12);
-var bytesToUuid = __webpack_require__(13);
+var rng = __webpack_require__(10);
+var bytesToUuid = __webpack_require__(11);
 
 function v4(options, buf, offset) {
   var i = buf && offset || 0;
@@ -903,7 +813,7 @@ function v4(options, buf, offset) {
 module.exports = v4;
 
 /***/ }),
-/* 12 */
+/* 10 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -944,7 +854,7 @@ if (getRandomValues) {
 }
 
 /***/ }),
-/* 13 */
+/* 11 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -969,7 +879,7 @@ function bytesToUuid(buf, offset) {
 module.exports = bytesToUuid;
 
 /***/ }),
-/* 14 */
+/* 12 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";

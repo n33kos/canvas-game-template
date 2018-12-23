@@ -15,13 +15,17 @@ export default class {
   }
 
   setDimensions() {
-    this.width = window.innerWidth
-    || document.documentElement.clientWidth
-    || document.body.clientWidth;
+    this.width = (
+      window.innerWidth
+      || document.documentElement.clientWidth
+      || document.body.clientWidth
+    ) * window.devicePixelRatio;
 
-    this.height = window.innerHeight
-    || document.documentElement.clientHeight
-    || document.body.clientHeight;
+    this.height = (
+      window.innerHeight
+      || document.documentElement.clientHeight
+      || document.body.clientHeight
+    ) * window.devicePixelRatio;
   }
 
   initCanvas() {
@@ -37,7 +41,7 @@ export default class {
 
     this.resizeCanvas();
 
-    window.addEventListener('resize', throttle(200, () => {
+    window.addEventListener('resize', throttle(1000, () => {
       this.setDimensions();
       this.resizeCanvas();
     }));

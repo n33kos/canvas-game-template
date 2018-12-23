@@ -1,4 +1,4 @@
-import * as defaultConfig from 'const/defaultConfig';
+import * as defaultConfig from 'config/defaultConfig';
 
 export default class {
   constructor() {

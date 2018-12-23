@@ -1,9 +1,8 @@
 const uuidv4 = require('uuid/v4');
-import Entity from 'class/Entity';
 
 export default class {
   constructor(GameState) {
-    this.Gamestate = GameState;
+    this.GameState = GameState;
     this.entities = [];
   }
 
