@@ -14,6 +14,6 @@ export default class extends Entity {
     ctx.rect(0, 0, this.dimensions.x, this.dimensions.y);
     ctx.fill();
 
-    this.rotation += 0.05;
+    this.rotation += 0.01 * this.GameState.deltaTime;
   }
 }

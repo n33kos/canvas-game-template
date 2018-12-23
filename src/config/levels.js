@@ -1,4 +1,4 @@
-import ColorCubes from 'levels/ColorCubes';
+import ColorCubes from 'level/ColorCubes';
 
 export default [
   ColorCubes,

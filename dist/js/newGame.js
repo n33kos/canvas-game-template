@@ -301,6 +301,10 @@ var _UI = __webpack_require__(20);
 
 var _UI2 = _interopRequireDefault(_UI);
 
+var _Update = __webpack_require__(21);
+
+var _Update2 = _interopRequireDefault(_Update);
+
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 var newGame = {
@@ -310,7 +314,8 @@ var newGame = {
   GameState: _GameState2.default,
   Render: _Render2.default,
   Scene: _Scene2.default,
-  UI: _UI2.default
+  UI: _UI2.default,
+  Update: _Update2.default
 };
 
 document.addEventListener("DOMContentLoaded", function (e) {
@@ -331,6 +336,9 @@ document.addEventListener("DOMContentLoaded", function (e) {
 
   GameState.Render = new newGame.Render(GameState);
   GameState.Render.init();
+
+  GameState.Update = new newGame.Update(GameState);
+  GameState.Update.init();
 
   GameState.UI = new newGame.UI(GameState);
   GameState.UI.init();
@@ -780,6 +788,8 @@ var _class = function (_Level) {
   _createClass(_class, [{
     key: 'load',
     value: function load() {
+      this.GameState.Scene.clear();
+
       for (var i = 0; i < 100; i++) {
         var cube = new _ColorCube2.default({
           GameState: this.GameState,
@@ -790,9 +800,10 @@ var _class = function (_Level) {
 
         this.GameState.Scene.add(cube);
       }
-
-      // Then do other things
     }
+  }, {
+    key: 'gameLogic',
+    value: function gameLogic() {}
   }]);
 
   return _class;
@@ -847,7 +858,7 @@ var _class = function (_Entity) {
       ctx.rect(0, 0, this.dimensions.x, this.dimensions.y);
       ctx.fill();
 
-      this.rotation += 0.05;
+      this.rotation += 0.01 * this.GameState.deltaTime;
     }
   }]);
 
@@ -988,6 +999,11 @@ var _class = function () {
     value: function load() {
       this.isLoaded = true;
     }
+  }, {
+    key: "gameLogic",
+    value: function gameLogic() {
+      // Override this function to add level specific game logic
+    }
   }]);
 
   return _class;
@@ -1031,7 +1047,6 @@ var _class = function () {
 
     this.GameState = GameState;
     this.isRunning = false;
-    this.lastUpdate = Date.now();
   }
 
   _createClass(_class, [{
@@ -1041,13 +1056,6 @@ var _class = function () {
         this.isRunning = true;
         this.render();
       };
-    }
-  }, {
-    key: "calculateDeltaTime",
-    value: function calculateDeltaTime() {
-      var now = Date.now();
-      this.GameState.deltaTime = now - this.lastUpdate;
-      this.lastUpdate = now;
     }
   }, {
     key: "shouldRender",
@@ -1064,12 +1072,6 @@ var _class = function () {
 
       // Bail out early
       if (!this.shouldRender()) return;
-
-      // Handle Keypresses
-      this.GameState.Controls.handlePressedKeys();
-
-      // Calculations
-      this.calculateDeltaTime();
 
       // Clear screen
       this.GameState.Canvas.clear();
@@ -1430,6 +1432,73 @@ var _class = function () {
       Array.from(document.querySelectorAll('[data-ui="level"]')).forEach(function (levelElement) {
         levelElement.innerHTML = level;
       });
+    }
+  }]);
+
+  return _class;
+}();
+
+exports.default = _class;
+
+/***/ }),
+/* 21 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+var _class = function () {
+  function _class(GameState) {
+    _classCallCheck(this, _class);
+
+    this.GameState = GameState;
+    this.isRunning = false;
+    this.lastUpdate = Date.now();
+    this.updateRate = 10;
+  }
+
+  _createClass(_class, [{
+    key: "init",
+    value: function init() {
+      if (!this.isRunning) {
+        this.isRunning = true;
+        this.update();
+      };
+    }
+  }, {
+    key: "calculateDeltaTime",
+    value: function calculateDeltaTime() {
+      var now = Date.now();
+      this.GameState.deltaTime = now - this.lastUpdate;
+      this.lastUpdate = now;
+    }
+  }, {
+    key: "shouldUpdate",
+    value: function shouldUpdate() {
+      return !this.GameState.isPaused;
+    }
+  }, {
+    key: "update",
+    value: function update() {
+      // Request new frame
+      if (this.isRunning) window.setTimeout(this.update.bind(this), this.updateRate);
+
+      // Bail out early
+      if (!this.shouldUpdate()) return;
+
+      // Handle Keypresses
+      this.GameState.Controls.handlePressedKeys();
+
+      // Calculations
+      this.calculateDeltaTime();
     }
   }]);
 

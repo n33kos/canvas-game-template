@@ -5,6 +5,7 @@ import GameState from 'class/GameState';
 import Render    from 'class/Render';
 import Scene     from 'class/Scene';
 import UI        from 'class/UI';
+import Update    from 'class/Update';
 
 const newGame = {
   Audio,
@@ -14,6 +15,7 @@ const newGame = {
   Render,
   Scene,
   UI,
+  Update,
 }
 
 document.addEventListener("DOMContentLoaded", (e) => {
@@ -34,6 +36,9 @@ document.addEventListener("DOMContentLoaded", (e) => {
 
   GameState.Render = new newGame.Render(GameState);
   GameState.Render.init();
+
+  GameState.Update = new newGame.Update(GameState);
+  GameState.Update.init();
 
   GameState.UI = new newGame.UI(GameState);
   GameState.UI.init();

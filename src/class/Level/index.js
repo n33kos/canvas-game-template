@@ -10,4 +10,8 @@ export default class {
   load() {
     this.isLoaded = true;
   }
+
+  gameLogic() {
+    // Override this function to add level specific game logic
+  }
 }

@@ -1,4 +1,4 @@
-import ColorCube   from 'entities/ColorCube';
+import ColorCube   from 'entity/ColorCube';
 import Level       from 'class/Level';
 import randomRange from 'lib/randomRange';
 import Vector2     from 'class/Vector2';
@@ -11,6 +11,8 @@ export default class extends Level {
   }
 
   load() {
+    this.GameState.Scene.clear();
+
     for (var i = 0; i < 100; i++) {
       const cube = new ColorCube({
         GameState: this.GameState,
@@ -24,7 +26,9 @@ export default class extends Level {
 
       this.GameState.Scene.add(cube);
     }
+  }
 
-    // Then do other things
+  gameLogic() {
+
   }
 }

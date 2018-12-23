@@ -2,7 +2,6 @@ export default class {
   constructor(GameState) {
     this.GameState = GameState;
     this.isRunning = false;
-    this.lastUpdate = Date.now();
   }
 
   init() {
@@ -10,12 +9,6 @@ export default class {
       this.isRunning = true;
       this.render();
     };
-  }
-
-  calculateDeltaTime() {
-    const now = Date.now();
-    this.GameState.deltaTime = now - this.lastUpdate;
-    this.lastUpdate = now;
   }
 
   shouldRender() {
@@ -28,12 +21,6 @@ export default class {
 
     // Bail out early
     if(!this.shouldRender()) return;
-
-    // Handle Keypresses
-    this.GameState.Controls.handlePressedKeys();
-
-    // Calculations
-    this.calculateDeltaTime();
 
     // Clear screen
     this.GameState.Canvas.clear();
