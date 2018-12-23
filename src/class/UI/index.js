@@ -18,6 +18,7 @@ export default class {
   init() {
     this.initListenters();
     this.setScreen('mainmenu');
+    this.updateLevel(this.GameState.levels[this.GameState.level].name);
   }
 
   initListenters() {
@@ -46,9 +47,9 @@ export default class {
       button.addEventListener('click', (e) => {
         this.GameState.level += parseInt(e.target.dataset.gamestateChangeLevel, 10);
         if (this.GameState.level >= this.GameState.levels.length) this.GameState.level = 0;
-        if (this.GameState.level < 0) this.GameState.level = this.GameState.levels.length;
+        if (this.GameState.level < 0) this.GameState.level = this.GameState.levels.length - 1;
 
-        this.updateLevel(this.GameState.levels[this.GameState.level]);
+        this.updateLevel(this.GameState.levels[this.GameState.level].name);
       });
     });
 
@@ -138,7 +139,7 @@ export default class {
     if (!level) return;
 
     Array.from(document.querySelectorAll('[data-ui="level"]')).forEach(levelElement => {
-      levelElement.innerHTML = level.name;
+      levelElement.innerHTML = level;
     });
   }
 }

@@ -18,6 +18,7 @@ const newGame = {
 
 document.addEventListener("DOMContentLoaded", (e) => {
   const GameState = new newGame.GameState();
+  GameState.init();
 
   GameState.Audio = new newGame.Audio(GameState);
   GameState.Audio.init();

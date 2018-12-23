@@ -5,6 +5,5 @@ export default class {
 
   load() {
     this.isLoaded = true;
-    console.log('level loaded');
   }
 }

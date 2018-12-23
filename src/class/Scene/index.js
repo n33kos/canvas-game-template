@@ -19,7 +19,7 @@ export default class {
     this.entities = this.entities.filter(el => el.uuid !== uuid);
   }
 
-  clearScene() {
+  clear() {
     this.entities = [];
   }
 }
