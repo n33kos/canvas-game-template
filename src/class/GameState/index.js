@@ -18,12 +18,26 @@ export default class {
       - this.Controls
       - this.Canvas
       - this.Scene
-      - this.Renderer
+      - this.Render
     */
   }
 
   init() {
     this.levels = levels;
+    this.initLevels();
+  }
+
+  initLevels() {
+    this.levels = this.levels.map(level => {
+      const lvl = new level();
+      lvl.init(this);
+      return lvl;
+    });
+  }
+
+  loadLevel() {
+    const level = this.levels[this.level];
+    level.load();
   }
 
   play() {
@@ -58,11 +72,5 @@ export default class {
     this.isRunning = false;
     this.isPaused = true;
     this.score = 0;
-  }
-
-  loadLevel() {
-    const levelClass = this.levels[this.level].const;
-    const level = new levelClass();
-    level.load(this);
   }
 }

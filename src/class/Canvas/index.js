@@ -7,6 +7,7 @@ export default class {
     this.cy = null;
     this.canvas = null;
     this.ctx = null;
+    this.scale = 1;
   }
 
   init() {
@@ -15,17 +16,18 @@ export default class {
   }
 
   setDimensions() {
+    this.scale = window.devicePixelRatio;
     this.width = (
       window.innerWidth
       || document.documentElement.clientWidth
       || document.body.clientWidth
-    ) * window.devicePixelRatio;
+    ) * this.scale;
 
     this.height = (
       window.innerHeight
       || document.documentElement.clientHeight
       || document.body.clientHeight
-    ) * window.devicePixelRatio;
+    ) * this.scale;
   }
 
   initCanvas() {
@@ -41,7 +43,7 @@ export default class {
 
     this.resizeCanvas();
 
-    window.addEventListener('resize', throttle(1000, () => {
+    window.addEventListener('resize', throttle(500, () => {
       this.setDimensions();
       this.resizeCanvas();
     }));

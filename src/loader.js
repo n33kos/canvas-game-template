@@ -2,7 +2,7 @@ import Audio     from 'class/Audio';
 import Canvas    from 'class/Canvas';
 import Controls  from 'class/Controls';
 import GameState from 'class/GameState';
-import Renderer  from 'class/Renderer';
+import Render    from 'class/Render';
 import Scene     from 'class/Scene';
 import UI        from 'class/UI';
 
@@ -11,7 +11,7 @@ const newGame = {
   Canvas,
   Controls,
   GameState,
-  Renderer,
+  Render,
   Scene,
   UI,
 }
@@ -23,9 +23,6 @@ document.addEventListener("DOMContentLoaded", (e) => {
   GameState.Audio = new newGame.Audio(GameState);
   GameState.Audio.init();
 
-  GameState.UI = new newGame.UI(GameState);
-  GameState.UI.init();
-
   GameState.Controls = new newGame.Controls(GameState);
   GameState.Controls.init();
 
@@ -35,6 +32,9 @@ document.addEventListener("DOMContentLoaded", (e) => {
   GameState.Scene = new newGame.Scene(GameState);
   GameState.Scene.init();
 
-  GameState.Renderer = new newGame.Renderer(GameState);
-  GameState.Renderer.init();
+  GameState.Render = new newGame.Render(GameState);
+  GameState.Render.init();
+
+  GameState.UI = new newGame.UI(GameState);
+  GameState.UI.init();
 });

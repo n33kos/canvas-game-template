@@ -9,10 +9,11 @@ export default class extends Entity {
   }
 
   drawEntity(ctx) {
+    ctx.beginPath();
     ctx.fillStyle = this.color;
     ctx.rect(0, 0, this.dimensions.x, this.dimensions.y);
     ctx.fill();
 
-    this.rotation += 0.01;
+    this.rotation += 0.05;
   }
 }

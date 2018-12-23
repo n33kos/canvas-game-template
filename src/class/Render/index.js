@@ -29,19 +29,19 @@ export default class {
     // Bail out early
     if(!this.shouldRender()) return;
 
-    // Clear screen
-    this.GameState.Canvas.clear();
+    // Handle Keypresses
+    this.GameState.Controls.handlePressedKeys();
 
     // Calculations
     this.calculateDeltaTime();
 
-    // Handle Keypresses
-    this.GameState.Controls.handlePressedKeys();
+    // Clear screen
+    this.GameState.Canvas.clear();
 
     // Draw Entities
     this.GameState.Scene.entities.forEach(
       entity => {
-        entity.draw(this.GameState.Canvas.ctx);
+        entity.draw(this.GameState);
       }
     );
   }

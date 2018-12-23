@@ -20,26 +20,22 @@ export default class {
     this.rotation = rotation;
   }
 
-  init() {
-    // Nothing here yet
-  }
-
   drawEntity(ctx) {
-    // Override this function to draw entity. Draw canvas calls at position 0,0.
+    // Override this function to draw entity.
   }
 
-  draw(ctx) {
+  draw() {
     const canvasPosition = worldSpaceToCanvas(this.GameState, this.position);
     const offset = new Vector2(-(this.origin.x * this.dimensions.x), -(this.origin.y * this.dimensions.y));
 
     // Move canvas, rotate, then add origin offset.
-    ctx.translate(canvasPosition.x, canvasPosition.y);
-    ctx.rotate(this.rotation);
-    ctx.translate(offset.x, offset.y);
+    this.GameState.Canvas.ctx.translate(canvasPosition.x, canvasPosition.y);
+    this.GameState.Canvas.ctx.rotate(this.rotation);
+    this.GameState.Canvas.ctx.translate(offset.x, offset.y);
 
-    this.drawEntity(ctx);
+    this.drawEntity(this.GameState.Canvas.ctx);
 
     // Reset transforms
-    ctx.setTransform(1, 0, 0, 1, 0, 0);
+    this.GameState.Canvas.ctx.setTransform(1, 0, 0, 1, 0, 0);
   }
 }

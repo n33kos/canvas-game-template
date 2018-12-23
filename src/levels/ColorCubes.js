@@ -4,26 +4,27 @@ import randomRange from 'lib/randomRange';
 import Vector2     from 'class/Vector2';
 
 export default class extends Level {
-  constructor() {
-    super();
+  constructor(config) {
+    super(config);
 
     this.name = "Color Cubes";
   }
 
-  load(GameState) {
-    GameState.Scene.clear();
-
-    for (var i = 0; i < 10; i++) {
+  load() {
+    for (var i = 0; i < 100; i++) {
       const cube = new ColorCube({
-        GameState,
-        color: `rgb(${Math.random()*255},${Math.random()*255},${Math.random()*255})`,
+        GameState: this.GameState,
+        color: `rgb(${Math.floor(Math.random()*255)},${Math.floor(Math.random()*255)},${Math.floor(Math.random()*255)})`,
         position: new Vector2(
-          randomRange(-GameState.Canvas.cx, GameState.Canvas.cx),
-          randomRange(-GameState.Canvas.cy, GameState.Canvas.cy),
+          randomRange(-this.GameState.Canvas.cx, this.GameState.Canvas.cx),
+          randomRange(-this.GameState.Canvas.cy, this.GameState.Canvas.cy),
         ),
-        dimensions: new Vector2(50, 50),
+        dimensions: new Vector2(30, 30),
       });
-      GameState.Scene.add(cube);
+
+      this.GameState.Scene.add(cube);
     }
+
+    // Then do other things
   }
 }

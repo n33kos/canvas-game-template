@@ -289,9 +289,9 @@ var _GameState = __webpack_require__(6);
 
 var _GameState2 = _interopRequireDefault(_GameState);
 
-var _Renderer = __webpack_require__(15);
+var _Render = __webpack_require__(15);
 
-var _Renderer2 = _interopRequireDefault(_Renderer);
+var _Render2 = _interopRequireDefault(_Render);
 
 var _Scene = __webpack_require__(16);
 
@@ -308,7 +308,7 @@ var newGame = {
   Canvas: _Canvas2.default,
   Controls: _Controls2.default,
   GameState: _GameState2.default,
-  Renderer: _Renderer2.default,
+  Render: _Render2.default,
   Scene: _Scene2.default,
   UI: _UI2.default
 };
@@ -320,9 +320,6 @@ document.addEventListener("DOMContentLoaded", function (e) {
   GameState.Audio = new newGame.Audio(GameState);
   GameState.Audio.init();
 
-  GameState.UI = new newGame.UI(GameState);
-  GameState.UI.init();
-
   GameState.Controls = new newGame.Controls(GameState);
   GameState.Controls.init();
 
@@ -332,8 +329,11 @@ document.addEventListener("DOMContentLoaded", function (e) {
   GameState.Scene = new newGame.Scene(GameState);
   GameState.Scene.init();
 
-  GameState.Renderer = new newGame.Renderer(GameState);
-  GameState.Renderer.init();
+  GameState.Render = new newGame.Render(GameState);
+  GameState.Render.init();
+
+  GameState.UI = new newGame.UI(GameState);
+  GameState.UI.init();
 });
 
 /***/ }),
@@ -406,6 +406,7 @@ var _class = function () {
     this.cy = null;
     this.canvas = null;
     this.ctx = null;
+    this.scale = 1;
   }
 
   _createClass(_class, [{
@@ -417,9 +418,10 @@ var _class = function () {
   }, {
     key: 'setDimensions',
     value: function setDimensions() {
-      this.width = (window.innerWidth || document.documentElement.clientWidth || document.body.clientWidth) * window.devicePixelRatio;
+      this.scale = window.devicePixelRatio;
+      this.width = (window.innerWidth || document.documentElement.clientWidth || document.body.clientWidth) * this.scale;
 
-      this.height = (window.innerHeight || document.documentElement.clientHeight || document.body.clientHeight) * window.devicePixelRatio;
+      this.height = (window.innerHeight || document.documentElement.clientHeight || document.body.clientHeight) * this.scale;
     }
   }, {
     key: 'initCanvas',
@@ -438,7 +440,7 @@ var _class = function () {
 
       this.resizeCanvas();
 
-      window.addEventListener('resize', (0, _throttleDebounce.throttle)(1000, function () {
+      window.addEventListener('resize', (0, _throttleDebounce.throttle)(500, function () {
         _this.setDimensions();
         _this.resizeCanvas();
       }));
@@ -621,7 +623,7 @@ var _class = function () {
       - this.Controls
       - this.Canvas
       - this.Scene
-      - this.Renderer
+      - this.Render
     */
   }
 
@@ -629,6 +631,24 @@ var _class = function () {
     key: 'init',
     value: function init() {
       this.levels = _levels2.default;
+      this.initLevels();
+    }
+  }, {
+    key: 'initLevels',
+    value: function initLevels() {
+      var _this = this;
+
+      this.levels = this.levels.map(function (level) {
+        var lvl = new level();
+        lvl.init(_this);
+        return lvl;
+      });
+    }
+  }, {
+    key: 'loadLevel',
+    value: function loadLevel() {
+      var level = this.levels[this.level];
+      level.load();
     }
   }, {
     key: 'play',
@@ -668,13 +688,6 @@ var _class = function () {
       this.isPaused = true;
       this.score = 0;
     }
-  }, {
-    key: 'loadLevel',
-    value: function loadLevel() {
-      var levelClass = this.levels[this.level].const;
-      var level = new levelClass();
-      level.load(this);
-    }
   }]);
 
   return _class;
@@ -713,7 +726,7 @@ var _ColorCubes2 = _interopRequireDefault(_ColorCubes);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-exports.default = [{ const: _ColorCubes2.default, name: 'Color Cubes' }];
+exports.default = [_ColorCubes2.default];
 
 /***/ }),
 /* 9 */
@@ -755,10 +768,10 @@ function _inherits(subClass, superClass) { if (typeof superClass !== "function" 
 var _class = function (_Level) {
   _inherits(_class, _Level);
 
-  function _class() {
+  function _class(config) {
     _classCallCheck(this, _class);
 
-    var _this = _possibleConstructorReturn(this, (_class.__proto__ || Object.getPrototypeOf(_class)).call(this));
+    var _this = _possibleConstructorReturn(this, (_class.__proto__ || Object.getPrototypeOf(_class)).call(this, config));
 
     _this.name = "Color Cubes";
     return _this;
@@ -766,18 +779,19 @@ var _class = function (_Level) {
 
   _createClass(_class, [{
     key: 'load',
-    value: function load(GameState) {
-      GameState.Scene.clear();
-
-      for (var i = 0; i < 10; i++) {
+    value: function load() {
+      for (var i = 0; i < 100; i++) {
         var cube = new _ColorCube2.default({
-          GameState: GameState,
-          color: 'rgb(' + Math.random() * 255 + ',' + Math.random() * 255 + ',' + Math.random() * 255 + ')',
-          position: new _Vector2.default((0, _randomRange2.default)(-GameState.Canvas.cx, GameState.Canvas.cx), (0, _randomRange2.default)(-GameState.Canvas.cy, GameState.Canvas.cy)),
-          dimensions: new _Vector2.default(50, 50)
+          GameState: this.GameState,
+          color: 'rgb(' + Math.floor(Math.random() * 255) + ',' + Math.floor(Math.random() * 255) + ',' + Math.floor(Math.random() * 255) + ')',
+          position: new _Vector2.default((0, _randomRange2.default)(-this.GameState.Canvas.cx, this.GameState.Canvas.cx), (0, _randomRange2.default)(-this.GameState.Canvas.cy, this.GameState.Canvas.cy)),
+          dimensions: new _Vector2.default(30, 30)
         });
-        GameState.Scene.add(cube);
+
+        this.GameState.Scene.add(cube);
       }
+
+      // Then do other things
     }
   }]);
 
@@ -828,11 +842,12 @@ var _class = function (_Entity) {
   _createClass(_class, [{
     key: 'drawEntity',
     value: function drawEntity(ctx) {
+      ctx.beginPath();
       ctx.fillStyle = this.color;
       ctx.rect(0, 0, this.dimensions.x, this.dimensions.y);
       ctx.fill();
 
-      this.rotation += 0.01;
+      this.rotation += 0.05;
     }
   }]);
 
@@ -893,30 +908,25 @@ var _class = function () {
   }
 
   _createClass(_class, [{
-    key: 'init',
-    value: function init() {
-      // Nothing here yet
-    }
-  }, {
     key: 'drawEntity',
     value: function drawEntity(ctx) {
-      // Override this function to draw entity. Draw canvas calls at position 0,0.
+      // Override this function to draw entity.
     }
   }, {
     key: 'draw',
-    value: function draw(ctx) {
+    value: function draw() {
       var canvasPosition = (0, _worldSpaceToCanvas2.default)(this.GameState, this.position);
       var offset = new _Vector2.default(-(this.origin.x * this.dimensions.x), -(this.origin.y * this.dimensions.y));
 
       // Move canvas, rotate, then add origin offset.
-      ctx.translate(canvasPosition.x, canvasPosition.y);
-      ctx.rotate(this.rotation);
-      ctx.translate(offset.x, offset.y);
+      this.GameState.Canvas.ctx.translate(canvasPosition.x, canvasPosition.y);
+      this.GameState.Canvas.ctx.rotate(this.rotation);
+      this.GameState.Canvas.ctx.translate(offset.x, offset.y);
 
-      this.drawEntity(ctx);
+      this.drawEntity(this.GameState.Canvas.ctx);
 
       // Reset transforms
-      ctx.setTransform(1, 0, 0, 1, 0, 0);
+      this.GameState.Canvas.ctx.setTransform(1, 0, 0, 1, 0, 0);
     }
   }]);
 
@@ -969,6 +979,11 @@ var _class = function () {
   }
 
   _createClass(_class, [{
+    key: "init",
+    value: function init(GameState) {
+      this.GameState = GameState;
+    }
+  }, {
     key: "load",
     value: function load() {
       this.isLoaded = true;
@@ -1050,18 +1065,18 @@ var _class = function () {
       // Bail out early
       if (!this.shouldRender()) return;
 
-      // Clear screen
-      this.GameState.Canvas.clear();
+      // Handle Keypresses
+      this.GameState.Controls.handlePressedKeys();
 
       // Calculations
       this.calculateDeltaTime();
 
-      // Handle Keypresses
-      this.GameState.Controls.handlePressedKeys();
+      // Clear screen
+      this.GameState.Canvas.clear();
 
       // Draw Entities
       this.GameState.Scene.entities.forEach(function (entity) {
-        entity.draw(_this.GameState.Canvas.ctx);
+        entity.draw(_this.GameState);
       });
     }
   }]);
