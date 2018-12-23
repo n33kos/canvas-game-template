@@ -18,24 +18,39 @@ export default class {
     this.origin = origin;
     this.position = position;
     this.rotation = rotation;
+
+    // These vars will be calculated via setPosition
+    this.canvasPosition = new Vector2();
+    this.offset = new Vector2();
+    this.setPosition(position);
   }
 
-  drawEntity(ctx) {
-    // Override this function to draw entity.
+  setPosition(position) {
+    this.position = position;
+    this.canvasPosition = worldSpaceToCanvas(this.GameState, this.position);
+    this.offset = new Vector2(
+      -(this.origin.x * this.dimensions.x),
+      -(this.origin.y * this.dimensions.y)
+    );
   }
 
-  draw() {
-    const canvasPosition = worldSpaceToCanvas(this.GameState, this.position);
-    const offset = new Vector2(-(this.origin.x * this.dimensions.x), -(this.origin.y * this.dimensions.y));
-
+  drawEntity() {
     // Move canvas, rotate, then add origin offset.
-    this.GameState.Canvas.ctx.translate(canvasPosition.x, canvasPosition.y);
+    this.GameState.Canvas.ctx.translate(this.canvasPosition.x, this.canvasPosition.y);
     this.GameState.Canvas.ctx.rotate(this.rotation);
-    this.GameState.Canvas.ctx.translate(offset.x, offset.y);
+    this.GameState.Canvas.ctx.translate(this.offset.x, this.offset.y);
 
-    this.drawEntity(this.GameState.Canvas.ctx);
+    this.draw();
 
     // Reset transforms
     this.GameState.Canvas.ctx.setTransform(1, 0, 0, 1, 0, 0);
+  }
+
+  update() {
+    // Override this function for the entity's update loop
+  }
+
+  draw() {
+    // Override this function for the entity's draw loop
   }
 }

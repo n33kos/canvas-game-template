@@ -102,6 +102,44 @@ return /******/ (function(modules) { // webpackBootstrap
 
 
 Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+var _class = function () {
+  function _class() {
+    var x = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : 0;
+    var y = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : 0;
+
+    _classCallCheck(this, _class);
+
+    this.x = x;
+    this.y = y;
+  }
+
+  _createClass(_class, [{
+    key: "toArray",
+    value: function toArray() {
+      return [this.x, this.y];
+    }
+  }]);
+
+  return _class;
+}();
+
+exports.default = _class;
+
+/***/ }),
+/* 1 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
 	value: true
 });
 /* eslint-disable no-undefined,no-param-reassign,no-shadow */
@@ -229,44 +267,6 @@ exports.throttle = throttle;
 exports.debounce = debounce;
 
 /***/ }),
-/* 1 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-
-Object.defineProperty(exports, "__esModule", {
-  value: true
-});
-
-var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
-
-function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
-
-var _class = function () {
-  function _class() {
-    var x = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : 0;
-    var y = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : 0;
-
-    _classCallCheck(this, _class);
-
-    this.x = x;
-    this.y = y;
-  }
-
-  _createClass(_class, [{
-    key: "toArray",
-    value: function toArray() {
-      return [this.x, this.y];
-    }
-  }]);
-
-  return _class;
-}();
-
-exports.default = _class;
-
-/***/ }),
 /* 2 */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -357,7 +357,7 @@ Object.defineProperty(exports, "__esModule", {
 
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
-var _throttleDebounce = __webpack_require__(0);
+var _throttleDebounce = __webpack_require__(1);
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
@@ -401,7 +401,7 @@ Object.defineProperty(exports, "__esModule", {
 
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
-var _throttleDebounce = __webpack_require__(0);
+var _throttleDebounce = __webpack_require__(1);
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
@@ -486,7 +486,7 @@ Object.defineProperty(exports, "__esModule", {
 
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
-var _throttleDebounce = __webpack_require__(0);
+var _throttleDebounce = __webpack_require__(1);
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
@@ -761,7 +761,7 @@ var _randomRange = __webpack_require__(14);
 
 var _randomRange2 = _interopRequireDefault(_randomRange);
 
-var _Vector = __webpack_require__(1);
+var _Vector = __webpack_require__(0);
 
 var _Vector2 = _interopRequireDefault(_Vector);
 
@@ -790,12 +790,13 @@ var _class = function (_Level) {
     value: function load() {
       this.GameState.Scene.clear();
 
-      for (var i = 0; i < 100; i++) {
+      for (var i = 0; i < 1000; i++) {
         var cube = new _ColorCube2.default({
           GameState: this.GameState,
           color: 'rgb(' + Math.floor(Math.random() * 255) + ',' + Math.floor(Math.random() * 255) + ',' + Math.floor(Math.random() * 255) + ')',
           position: new _Vector2.default((0, _randomRange2.default)(-this.GameState.Canvas.cx, this.GameState.Canvas.cx), (0, _randomRange2.default)(-this.GameState.Canvas.cy, this.GameState.Canvas.cy)),
-          dimensions: new _Vector2.default(30, 30)
+          dimensions: new _Vector2.default(30, 30),
+          velocity: new _Vector2.default(Math.random() * 100, Math.random() * 100)
         });
 
         this.GameState.Scene.add(cube);
@@ -828,6 +829,10 @@ var _Entity2 = __webpack_require__(11);
 
 var _Entity3 = _interopRequireDefault(_Entity2);
 
+var _Vector = __webpack_require__(0);
+
+var _Vector2 = _interopRequireDefault(_Vector);
+
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
@@ -844,21 +849,39 @@ var _class = function (_Entity) {
 
     var _this = _possibleConstructorReturn(this, (_class.__proto__ || Object.getPrototypeOf(_class)).call(this, config));
 
-    var color = config.color;
+    var color = config.color,
+        velocity = config.velocity;
+
 
     _this.color = color;
+    _this.velocity = velocity;
     return _this;
   }
 
   _createClass(_class, [{
-    key: 'drawEntity',
-    value: function drawEntity(ctx) {
-      ctx.beginPath();
-      ctx.fillStyle = this.color;
-      ctx.rect(0, 0, this.dimensions.x, this.dimensions.y);
-      ctx.fill();
-
+    key: 'update',
+    value: function update() {
       this.rotation += 0.01 * this.GameState.deltaTime;
+
+      this.velocity = new _Vector2.default(this.velocity.x * 0.99, this.velocity.y * 0.99);
+
+      this.setPosition(new _Vector2.default(this.position.x + this.velocity.x, this.position.y + this.velocity.y));
+
+      this.boundingBox();
+    }
+  }, {
+    key: 'boundingBox',
+    value: function boundingBox() {
+      if (this.position.x > this.GameState.Canvas.cx || this.position.x < -this.GameState.Canvas.cx) this.velocity.x *= -1;
+      if (this.position.y > this.GameState.Canvas.cy || this.position.y < -this.GameState.Canvas.cy) this.velocity.y *= -1;
+    }
+  }, {
+    key: 'draw',
+    value: function draw() {
+      this.GameState.Canvas.ctx.beginPath();
+      this.GameState.Canvas.ctx.fillStyle = this.color;
+      this.GameState.Canvas.ctx.rect(0, 0, this.dimensions.x, this.dimensions.y);
+      this.GameState.Canvas.ctx.fill();
     }
   }]);
 
@@ -884,7 +907,7 @@ var _createClass = function () { function defineProperties(target, props) { for 
                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      */
 
 
-var _Vector = __webpack_require__(1);
+var _Vector = __webpack_require__(0);
 
 var _Vector2 = _interopRequireDefault(_Vector);
 
@@ -916,28 +939,42 @@ var _class = function () {
     this.origin = origin;
     this.position = position;
     this.rotation = rotation;
+
+    // These vars will be calculated via setPosition
+    this.canvasPosition = new _Vector2.default();
+    this.offset = new _Vector2.default();
+    this.setPosition(position);
   }
 
   _createClass(_class, [{
+    key: 'setPosition',
+    value: function setPosition(position) {
+      this.position = position;
+      this.canvasPosition = (0, _worldSpaceToCanvas2.default)(this.GameState, this.position);
+      this.offset = new _Vector2.default(-(this.origin.x * this.dimensions.x), -(this.origin.y * this.dimensions.y));
+    }
+  }, {
     key: 'drawEntity',
-    value: function drawEntity(ctx) {
-      // Override this function to draw entity.
+    value: function drawEntity() {
+      // Move canvas, rotate, then add origin offset.
+      this.GameState.Canvas.ctx.translate(this.canvasPosition.x, this.canvasPosition.y);
+      this.GameState.Canvas.ctx.rotate(this.rotation);
+      this.GameState.Canvas.ctx.translate(this.offset.x, this.offset.y);
+
+      this.draw();
+
+      // Reset transforms
+      this.GameState.Canvas.ctx.setTransform(1, 0, 0, 1, 0, 0);
+    }
+  }, {
+    key: 'update',
+    value: function update() {
+      // Override this function for the entity's update loop
     }
   }, {
     key: 'draw',
     value: function draw() {
-      var canvasPosition = (0, _worldSpaceToCanvas2.default)(this.GameState, this.position);
-      var offset = new _Vector2.default(-(this.origin.x * this.dimensions.x), -(this.origin.y * this.dimensions.y));
-
-      // Move canvas, rotate, then add origin offset.
-      this.GameState.Canvas.ctx.translate(canvasPosition.x, canvasPosition.y);
-      this.GameState.Canvas.ctx.rotate(this.rotation);
-      this.GameState.Canvas.ctx.translate(offset.x, offset.y);
-
-      this.drawEntity(this.GameState.Canvas.ctx);
-
-      // Reset transforms
-      this.GameState.Canvas.ctx.setTransform(1, 0, 0, 1, 0, 0);
+      // Override this function for the entity's draw loop
     }
   }]);
 
@@ -957,7 +994,7 @@ Object.defineProperty(exports, "__esModule", {
   value: true
 });
 
-var _Vector = __webpack_require__(1);
+var _Vector = __webpack_require__(0);
 
 var _Vector2 = _interopRequireDefault(_Vector);
 
@@ -1065,8 +1102,6 @@ var _class = function () {
   }, {
     key: "render",
     value: function render() {
-      var _this = this;
-
       // Request new frame
       if (this.isRunning) window.requestAnimationFrame(this.render.bind(this));
 
@@ -1078,7 +1113,7 @@ var _class = function () {
 
       // Draw Entities
       this.GameState.Scene.entities.forEach(function (entity) {
-        entity.draw(_this.GameState);
+        return entity.drawEntity();
       });
     }
   }]);
@@ -1499,6 +1534,11 @@ var _class = function () {
 
       // Calculations
       this.calculateDeltaTime();
+
+      // Handle Entity Update
+      this.GameState.Scene.entities.forEach(function (entity) {
+        return entity.update();
+      });
     }
   }]);
 

@@ -35,5 +35,8 @@ export default class {
 
     // Calculations
     this.calculateDeltaTime();
+
+    // Handle Entity Update
+    this.GameState.Scene.entities.forEach(entity => entity.update());
   }
 }

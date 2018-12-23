@@ -13,7 +13,7 @@ export default class extends Level {
   load() {
     this.GameState.Scene.clear();
 
-    for (var i = 0; i < 100; i++) {
+    for (var i = 0; i < 1000; i++) {
       const cube = new ColorCube({
         GameState: this.GameState,
         color: `rgb(${Math.floor(Math.random()*255)},${Math.floor(Math.random()*255)},${Math.floor(Math.random()*255)})`,
@@ -22,6 +22,7 @@ export default class extends Level {
           randomRange(-this.GameState.Canvas.cy, this.GameState.Canvas.cy),
         ),
         dimensions: new Vector2(30, 30),
+        velocity: new Vector2(Math.random()*100, Math.random()*100),
       });
 
       this.GameState.Scene.add(cube);

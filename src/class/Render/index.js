@@ -26,10 +26,6 @@ export default class {
     this.GameState.Canvas.clear();
 
     // Draw Entities
-    this.GameState.Scene.entities.forEach(
-      entity => {
-        entity.draw(this.GameState);
-      }
-    );
+    this.GameState.Scene.entities.forEach(entity => entity.drawEntity());
   }
 }
