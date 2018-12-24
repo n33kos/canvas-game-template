@@ -1,6 +1,7 @@
 export default class {
   constructor() {
     this.isLoaded = false;
+    this.audioNodes = [];
   }
 
   init(GameState) {

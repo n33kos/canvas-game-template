@@ -52,6 +52,9 @@ export default class {
     if (response == true) {
       this.endGame();
       this.UI.setScreen('level');
+      this.levels[this.level].audioNodes.forEach(audioNode => {
+        audioNode.stop(0);
+      });
     }
   }
 

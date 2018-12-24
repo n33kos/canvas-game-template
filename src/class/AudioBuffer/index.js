@@ -41,6 +41,6 @@ export default class {
   }
 
   stop() {
-    if(this.audioNode && this.audioNode.playbackState === 2) this.audioNode.stop(0);
+    this.audioNode.stop(0);
   }
 }

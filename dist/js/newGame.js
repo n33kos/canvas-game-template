@@ -387,6 +387,7 @@ var _class = function () {
     _classCallCheck(this, _class);
 
     this.isLoaded = false;
+    this.audioNodes = [];
   }
 
   _createClass(_class, [{
@@ -840,6 +841,9 @@ var _class = function () {
       if (response == true) {
         this.endGame();
         this.UI.setScreen('level');
+        this.levels[this.level].audioNodes.forEach(function (audioNode) {
+          audioNode.stop(0);
+        });
       }
     }
   }, {
@@ -1147,6 +1151,7 @@ var _class = function (_Level) {
     key: 'load',
     value: function load() {
       this.GameState.Scene.clear();
+      this.audioNodes = [];
 
       this.addBGMusic();
       this.addGround();
@@ -1155,17 +1160,16 @@ var _class = function (_Level) {
   }, {
     key: 'addBGMusic',
     value: function addBGMusic() {
-      var _this2 = this;
-
-      this.audioNode = new _AudioBuffer2.default({
+      var audioNode = new _AudioBuffer2.default({
         GameState: this.GameState,
         audioFileUrl: './audio/bg.mp3',
         shouldLoop: true
       });
-      this.audioNode.load(function () {});
+      audioNode.load(function () {});
       window.setTimeout(function () {
-        _this2.audioNode.play();
+        audioNode.play();
       }, 100);
+      this.audioNodes.push(audioNode);
     }
   }, {
     key: 'addCharacter',
@@ -1277,7 +1281,7 @@ var _class = function () {
   }, {
     key: "stop",
     value: function stop() {
-      if (this.audioNode && this.audioNode.playbackState === 2) this.audioNode.stop(0);
+      this.audioNode.stop(0);
     }
   }]);
 

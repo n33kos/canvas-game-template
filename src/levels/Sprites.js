@@ -14,6 +14,7 @@ export default class extends Level {
 
   load() {
     this.GameState.Scene.clear();
+    this.audioNodes = [];
 
     this.addBGMusic();
     this.addGround();
@@ -21,13 +22,14 @@ export default class extends Level {
   }
 
   addBGMusic() {
-    this.audioNode = new AudioBuffer({
+    const audioNode = new AudioBuffer({
       GameState    : this.GameState,
       audioFileUrl : './audio/bg.mp3',
       shouldLoop   : true,
     });
-    this.audioNode.load(() => {});
-    window.setTimeout(() => { this.audioNode.play(); }, 100);
+    audioNode.load(() => {});
+    window.setTimeout(() => { audioNode.play(); }, 100);
+    this.audioNodes.push(audioNode);
   }
 
   addCharacter() {
