@@ -1,7 +1,4 @@
-/*
-  Example sprites sourced from : https://jesse-m.itch.io/jungle-pack
-*/
-
+import AudioBuffer from 'class/AudioBuffer';
 import Background  from 'class/Background';
 import Level       from 'class/Level';
 import randomRange from 'lib/randomRange';
@@ -18,8 +15,19 @@ export default class extends Level {
   load() {
     this.GameState.Scene.clear();
 
+    this.addBGMusic();
     this.addGround();
     this.addCharacter();
+  }
+
+  addBGMusic() {
+    this.audioNode = new AudioBuffer({
+      GameState    : this.GameState,
+      audioFileUrl : './audio/bg.mp3',
+      shouldLoop   : true,
+    });
+    this.audioNode.load(() => {});
+    window.setTimeout(() => { this.audioNode.play(); }, 100);
   }
 
   addCharacter() {

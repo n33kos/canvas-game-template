@@ -17,7 +17,7 @@
 
   <body>
     <div class="UserInterface">
-      <div data-screen="mainmenu">
+      <div data-screen="mainmenu" data-gamestate-init-audio>
         <button data-nav="play" data-target-screen="level">Play</button>
         <button data-nav="about" data-target-screen="about">About</button>
       </div>
@@ -41,7 +41,7 @@
       <div data-screen="game">
         <div data-ui="score"></div>
 
-        <button data-nav="pause" data-gamestate-pause>Pause</button>
+        <button data-nav="pause" data-gamestate-pause data-gamestate-mute>Pause</button>
         <button data-nav="restart" data-gamestate-restart>Restart</button>
       </div>
 

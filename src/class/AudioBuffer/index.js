@@ -1,14 +1,15 @@
 export default class {
   constructor({
     audioFileUrl,
-    audioContext,
-    masterAudioNode,
+    GameState,
+    shouldLoop,
   }) {
-    this.audioContext = audioContext;
-    this.audioFileUrl = `./audio/${audioFileUrl}`;
+    this.audioFileUrl = audioFileUrl;
+    this.GameState = GameState;
+    this.shouldLoop = shouldLoop;
+
     this.audioNode = null;
     this.buffer = null;
-    this.masterAudioNode = masterAudioNode;
   }
 
   load(callback) {
@@ -26,15 +27,16 @@ export default class {
   }
 
   createBufferFromData(data) {
-    this.audioContext.decodeAudioData(data, (buffer) => {
+    this.GameState.Audio.audioContext.decodeAudioData(data, (buffer) => {
       this.buffer = buffer;
     });
   }
 
   play() {
-    this.audioNode = this.audioContext.createBufferSource();
+    this.audioNode = this.GameState.Audio.audioContext.createBufferSource();
     this.audioNode.buffer = this.buffer;
-    this.audioNode.connect(this.masterAudioNode);
+    this.audioNode.connect(this.GameState.Audio.masterAudioNode);
+    this.audioNode.loop = this.shouldLoop;
     this.audioNode.start();
   }
 

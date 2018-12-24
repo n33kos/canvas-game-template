@@ -3,14 +3,15 @@ export default class {
     this.GameState = GameState;
     this.screens = document.querySelectorAll('[data-screen]');
     this.buttons = {
-      mute        : document.querySelectorAll('[data-nav="mute"]'),
-      quit        : document.querySelectorAll('[data-nav="quit"]'),
-      screens     : document.querySelectorAll('[data-target-screen]'),
-      play        : document.querySelectorAll('[data-gamestate-play]'),
-      pause       : document.querySelectorAll('[data-gamestate-pause]'),
-      restart     : document.querySelectorAll('[data-gamestate-restart]'),
-      fullscreen  : document.querySelectorAll('[data-nav="fullscreen"]'),
+      fullscreen  : document.querySelectorAll('[data-gamestate-fullscreen]'),
+      initAudio   : document.querySelectorAll('[data-gamestate-init-audio]'),
       level       : document.querySelectorAll('[data-gamestate-change-level]'),
+      mute        : document.querySelectorAll('[data-gamestate-mute]'),
+      pause       : document.querySelectorAll('[data-gamestate-pause]'),
+      play        : document.querySelectorAll('[data-gamestate-play]'),
+      quit        : document.querySelectorAll('[data-gamestate-quit]'),
+      restart     : document.querySelectorAll('[data-gamestate-restart]'),
+      screens     : document.querySelectorAll('[data-target-screen]'),
     };
     this.isFullscreen = false;
   }
@@ -21,15 +22,23 @@ export default class {
     this.updateLevel(this.GameState.levels[this.GameState.level].name);
   }
 
+
   initListenters() {
+    // Init audio on user input
+    Array.from(this.buttons.initAudio).forEach(button => {
+      button.addEventListener('click', () => {
+        if (!this.GameState.Audio.isInitialized) this.GameState.Audio.init();
+      });
+    });
+
     // Play buttons
     Array.from(this.buttons.play).forEach(button => {
-      button.addEventListener('click', () => this.GameState.play() );
+      button.addEventListener('click', () => this.GameState.play());
     });
 
     // Pause buttons
     Array.from(this.buttons.pause).forEach(button => {
-      button.addEventListener('click', () => this.GameState.togglePause() );
+      button.addEventListener('click', () => this.GameState.togglePause());
     });
 
     // Restart Buttons
@@ -60,20 +69,7 @@ export default class {
 
     // Mute Buttons
     Array.from(this.buttons.mute).forEach(button => {
-      button.addEventListener('click', (e) => {
-
-        const audioCtx = this.GameState.Audio.audioContext;
-
-        if(audioCtx.state === 'running') {
-          audioCtx.suspend().then(function() {
-            e.target.innerHTML = 'Resume';
-          });
-        } else if(audioCtx.state === 'suspended') {
-          audioCtx.resume().then(function() {
-            e.target.innerHTML = 'Mute';
-          });
-        }
-      });
+      button.addEventListener('click', (e) => this.GameState.Audio.toggleMute());
     });
 
     // UI Screen Transitions

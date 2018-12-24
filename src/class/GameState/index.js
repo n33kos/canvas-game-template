@@ -3,10 +3,9 @@ import levels             from 'config/levels';
 
 export default class {
   constructor() {
-    this.audioContext = null;
     this.canvas = null;
     this.deltaTime = 1;
-    this.isPaused = false;
+    this.isPaused = true;
     this.level = 0;
     this.levels = [];
     this.score = 0;
@@ -44,8 +43,8 @@ export default class {
   }
 
   play() {
+    this.isPaused = false;
     this.loadLevel();
-    if (this.isPaused) this.togglePause();
   }
 
   restart() {
@@ -65,7 +64,7 @@ export default class {
     }
 
     //Trigger events on pause
-    if (this.isPaused) {
+    if (!this.isPaused) {
       this.Audio.audioContext.suspend();
     }
   }

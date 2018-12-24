@@ -22,8 +22,8 @@ document.addEventListener("DOMContentLoaded", (e) => {
   const GameState = new newGame.GameState();
   GameState.init();
 
+  // Audio needs to be initialized after user input, refer to UI class for init() call
   GameState.Audio = new newGame.Audio(GameState);
-  GameState.Audio.init();
 
   GameState.Controls = new newGame.Controls(GameState);
   GameState.Controls.init();
