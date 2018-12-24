@@ -38,6 +38,9 @@ export default class {
   loadLevel() {
     const level = this.levels[this.level];
     level.load();
+
+    // Remove focus from any UI elements clicked to prevent control misdirection
+    document.activeElement.blur();
   }
 
   play() {

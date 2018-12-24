@@ -1,4 +1,4 @@
-import Entity from 'class/Entity';
+import Entity  from 'class/Entity';
 import Vector2 from 'class/Vector2';
 
 export default class extends Entity {

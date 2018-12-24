@@ -1,10 +1,11 @@
 import { throttle } from 'throttle-debounce';
+import Vector2      from 'class/Vector2';
 
 export default class {
   constructor(GameState) {
     this.GameState = GameState;
     this.isMouseDown = false;
-    this.oldPosition = 0;
+    this.lastPosition = null;
     this.pressedKeys = [];
     this.debounceValue = 10;
   }
@@ -27,29 +28,27 @@ export default class {
 
   handleTouchStart(e) {
     this.isMouseDown = true;
-    this.oldPosition = e.targetTouches[0].clientX;
+
+    this.lastPosition = new Vector2(e.targetTouches[0].clientX, e.targetTouches[0].clientY);
   }
 
   handleTouchMove(e) {
     e.preventDefault();
     if (!this.isMouseDown || this.GameState.isPaused) return;
 
-    for (let i=0; i < e.targetTouches.length; i++) {
-      // Do something here with position
-      this.oldPosition = e.targetTouches[i].clientX;
-    }
+    this.lastPosition = new Vector2(e.targetTouches[0].clientX, e.targetTouches[0].clientY);
   }
 
   handleMouseDown(e) {
     this.isMouseDown = true;
-    this.oldPosition = e.clientX;
+
+    this.lastPosition = new Vector2(e.clientX, e.clientY);
   }
 
   handleMouseMove(e) {
     if (!this.isMouseDown || this.GameState.isPaused) return;
 
-    // Do something here with position
-    this.oldPosition = e.clientX;
+    this.lastPosition = new Vector2(e.clientX, e.clientY);
   }
 
   handleKeyDown(e) {
@@ -59,14 +58,5 @@ export default class {
   handleKeyUp(e) {
     const index = this.pressedKeys.indexOf(e.keyCode);
     if (index > -1) this.pressedKeys.splice(index, 1);
-  }
-
-  handlePressedKeys() {
-    // left arrow
-    if (this.pressedKeys.includes(37)) {
-    }
-    // right arrow
-    if (this.pressedKeys.includes(39)) {
-    }
   }
 }

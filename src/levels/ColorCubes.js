@@ -1,4 +1,4 @@
-import ColorCube   from 'entity/ColorCube';
+import ColorCube   from 'gameObjects/ColorCube';
 import Level       from 'class/Level';
 import randomRange from 'lib/randomRange';
 import Vector2     from 'class/Vector2';
@@ -30,6 +30,6 @@ export default class extends Level {
   }
 
   gameLogic() {
-
+    // Override this function to add level specific game logic
   }
 }

@@ -25,12 +25,17 @@ export default class {
     this.setPosition(position);
   }
 
+  // Remember: use setPosition instead of directly setting position var.
   setPosition(position) {
     this.position = position;
     this.canvasPosition = worldSpaceToCanvas(this.GameState, this.position);
+    this.calculateOffset();
+  }
+
+  calculateOffset() {
     this.offset = new Vector2(
       -(this.origin.x * this.dimensions.x),
-      -(this.origin.y * this.dimensions.y)
+      -(this.origin.y * this.dimensions.y),
     );
   }
 

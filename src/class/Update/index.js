@@ -30,11 +30,11 @@ export default class {
     // Bail out early
     if(!this.shouldUpdate()) return;
 
-    // Handle Keypresses
-    this.GameState.Controls.handlePressedKeys();
-
     // Calculations
     this.calculateDeltaTime();
+
+    // Handle Level specific game logic
+    this.GameState.levels[this.GameState.level].gameLogic();
 
     // Handle Entity Update
     this.GameState.Scene.entities.forEach(entity => entity.update());

@@ -54,6 +54,7 @@ export default class {
   	this.canvas.height = this.height;
     this.cx = this.width / 2;
     this.cy = this.height / 2;
+    this.ctx.imageSmoothingEnabled = false;
   }
 
   clear() {
