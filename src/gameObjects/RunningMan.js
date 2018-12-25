@@ -1,3 +1,4 @@
+
 import Sprite  from 'class/Sprite';
 import Vector2 from 'class/Vector2';
 import {
@@ -43,7 +44,7 @@ export default class extends Sprite {
     if (this.GameState.Controls.pressedKeys.includes(LEFT_ARROW)) {
       this.currentAnimation = 'run';
 
-      if (this.position.x > -(this.GameState.Canvas.cx - this.offset.x)) {
+      if (this.position.x > -(this.GameState.Canvas.cx - this.absoluteOffset.x)) {
         this.mirrorX = true;
         tempPos.x -= this.moveSpeed;
       }
@@ -52,7 +53,7 @@ export default class extends Sprite {
     if (this.GameState.Controls.pressedKeys.includes(RIGHT_ARROW)) {
       this.currentAnimation = 'run';
 
-      if (this.position.x < (this.GameState.Canvas.cx + this.offset.x)) {
+      if (this.position.x < (this.GameState.Canvas.cx + this.absoluteOffset.x)) {
         this.mirrorX = false;
         tempPos.x += this.moveSpeed;
       }

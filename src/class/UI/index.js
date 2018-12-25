@@ -11,7 +11,7 @@ export default class {
       play        : document.querySelectorAll('[data-gamestate-play]'),
       quit        : document.querySelectorAll('[data-gamestate-quit]'),
       restart     : document.querySelectorAll('[data-gamestate-restart]'),
-      screens     : document.querySelectorAll('[data-target-screen]'),
+      screens     : document.querySelectorAll('[data-ui-target-screen]'),
     };
     this.isFullscreen = false;
   }
@@ -21,7 +21,6 @@ export default class {
     this.setScreen('mainmenu');
     this.updateLevel(this.GameState.levels[this.GameState.level].name);
   }
-
 
   initListenters() {
     // Init audio on user input
@@ -79,7 +78,7 @@ export default class {
   }
 
   initTransitions(e) {
-    this.setScreen(e.target.dataset.targetScreen);
+    this.setScreen(e.target.dataset.uiTargetScreen);
   }
 
   setScreen(screenToSet) {

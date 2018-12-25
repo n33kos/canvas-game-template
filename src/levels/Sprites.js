@@ -36,7 +36,7 @@ export default class extends Level {
     const runner = new RunningMan({
       GameState: this.GameState,
       dimensions: new Vector2(21, 32),
-      origin: new Vector2(0.5, 1),
+      offset: new Vector2(0.5, 1),
       scale: new Vector2(10, 10),
       initialheight: -this.GameState.Canvas.cy + 285,
     });
@@ -48,7 +48,7 @@ export default class extends Level {
   addGround() {
     const ground = new Background({
       GameState: this.GameState,
-      origin: new Vector2(0, 0),
+      offset: new Vector2(0, 0),
       dimensions: new Vector2(this.GameState.Canvas.width, 32),
       position: new Vector2(-this.GameState.Canvas.cx, -this.GameState.Canvas.cy + 320),
       imageUrl: './img/ground.png',

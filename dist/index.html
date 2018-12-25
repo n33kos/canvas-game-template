@@ -18,8 +18,8 @@
   <body>
     <div class="UserInterface">
       <div data-screen="mainmenu" data-gamestate-init-audio>
-        <button data-nav="play" data-target-screen="level">Play</button>
-        <button data-nav="about" data-target-screen="about">About</button>
+        <button data-ui-target-screen="level">Play</button>
+        <button data-ui-target-screen="about">About</button>
       </div>
 
       <div data-screen="level">
@@ -29,26 +29,26 @@
           <button class="IconButton LevelUp" data-gamestate-change-level="1">Next Level</button>
         </div>
 
-        <button data-nav="play" data-target-screen="game" data-gamestate-play>Play</button>
-        <button data-target-screen="mainmenu">Back</button>
+        <button data-ui-target-screen="game" data-gamestate-play>Play</button>
+        <button data-ui-target-screen="mainmenu">Back</button>
       </div>
 
       <div data-screen="about">
         About Screen
-        <button data-target-screen="mainmenu">Back</button>
+        <button data-ui-target-screen="mainmenu">Back</button>
       </div>
 
       <div data-screen="game">
         <div data-ui="score"></div>
 
-        <button data-nav="pause" data-gamestate-pause data-gamestate-mute>Pause</button>
-        <button data-nav="restart" data-gamestate-restart>Restart</button>
+        <button data-gamestate-pause data-gamestate-mute>Pause</button>
+        <button data-gamestate-restart>Restart</button>
       </div>
 
       <div data-screen="score">
         <span data-ui="score">0</span>
 
-        <button data-target-screen="mainmenu">Menu</button>
+        <button data-ui-target-screen="mainmenu">Menu</button>
       </div>
     </div>
 

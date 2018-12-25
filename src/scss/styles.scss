@@ -36,15 +36,31 @@ canvas {
   top: 0;
   width: 100%;
   z-index: 10;
+}
 
-  [data-screen] {
-    opacity: 0;
-    pointer-events: none;
-    transition: all 1s ease;
+[data-screen] {
+  opacity: 0;
+  pointer-events: none;
+  transition: all 1s ease;
 
-    &.active {
-      opacity: 1;
-      pointer-events: auto;
-    }
+  &.active {
+    opacity: 1;
+    pointer-events: auto;
   }
+}
+
+[data-screen] {
+  background: rgba(255, 255, 255, 0.2);
+  height: 200px;
+  left: 50%;
+  position: absolute;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  width: 200px;
+}
+
+[data-screen="game"] {
+  top: 0;
+  left: 0;
+  transform: none;
 }

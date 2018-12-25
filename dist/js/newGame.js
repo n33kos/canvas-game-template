@@ -145,7 +145,7 @@ Object.defineProperty(exports, "__esModule", {
 
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }(); /*
                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        Override this class to create game entities.
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                       Draw canvas calls at position 0,0 as position, rotation, and origin will be applied automagically
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                       Draw canvas calls at position 0,0 as position, rotation, and offset will be applied automagically
                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      */
 
 
@@ -167,8 +167,8 @@ var _class = function () {
         dimensions = _ref$dimensions === undefined ? new _Vector2.default(100, 100) : _ref$dimensions,
         _ref$GameState = _ref.GameState,
         GameState = _ref$GameState === undefined ? null : _ref$GameState,
-        _ref$origin = _ref.origin,
-        origin = _ref$origin === undefined ? new _Vector2.default(0.5, 0.5) : _ref$origin,
+        _ref$offset = _ref.offset,
+        offset = _ref$offset === undefined ? new _Vector2.default(0.5, 0.5) : _ref$offset,
         _ref$position = _ref.position,
         position = _ref$position === undefined ? new _Vector2.default() : _ref$position,
         _ref$rotation = _ref.rotation,
@@ -178,13 +178,13 @@ var _class = function () {
 
     this.dimensions = dimensions;
     this.GameState = GameState;
-    this.origin = origin;
+    this.offset = offset;
     this.position = position;
     this.rotation = rotation;
 
     // These vars will be calculated via setPosition
     this.canvasPosition = new _Vector2.default();
-    this.offset = new _Vector2.default();
+    this.absoluteOffset = new _Vector2.default();
     this.setPosition(position);
   }
 
@@ -201,15 +201,15 @@ var _class = function () {
   }, {
     key: 'calculateOffset',
     value: function calculateOffset() {
-      this.offset = new _Vector2.default(-(this.origin.x * this.dimensions.x), -(this.origin.y * this.dimensions.y));
+      this.absoluteOffset = new _Vector2.default(-(this.offset.x * this.dimensions.x), -(this.offset.y * this.dimensions.y));
     }
   }, {
     key: 'drawEntity',
     value: function drawEntity() {
-      // Move canvas, rotate, then add origin offset.
+      // Move canvas, rotate, then add offset.
       this.GameState.Canvas.ctx.translate(this.canvasPosition.x, this.canvasPosition.y);
       this.GameState.Canvas.ctx.rotate(this.rotation);
-      this.GameState.Canvas.ctx.translate(this.offset.x, this.offset.y);
+      this.GameState.Canvas.ctx.translate(this.absoluteOffset.x, this.absoluteOffset.y);
 
       this.draw();
 
@@ -1177,7 +1177,7 @@ var _class = function (_Level) {
       var runner = new _RunningMan2.default({
         GameState: this.GameState,
         dimensions: new _Vector2.default(21, 32),
-        origin: new _Vector2.default(0.5, 1),
+        offset: new _Vector2.default(0.5, 1),
         scale: new _Vector2.default(10, 10),
         initialheight: -this.GameState.Canvas.cy + 285
       });
@@ -1190,7 +1190,7 @@ var _class = function (_Level) {
     value: function addGround() {
       var ground = new _Background2.default({
         GameState: this.GameState,
-        origin: new _Vector2.default(0, 0),
+        offset: new _Vector2.default(0, 0),
         dimensions: new _Vector2.default(this.GameState.Canvas.width, 32),
         position: new _Vector2.default(-this.GameState.Canvas.cx, -this.GameState.Canvas.cy + 320),
         imageUrl: './img/ground.png',
@@ -1450,7 +1450,7 @@ var _class = function (_Sprite) {
       if (this.GameState.Controls.pressedKeys.includes(_keyCodes.LEFT_ARROW)) {
         this.currentAnimation = 'run';
 
-        if (this.position.x > -(this.GameState.Canvas.cx - this.offset.x)) {
+        if (this.position.x > -(this.GameState.Canvas.cx - this.absoluteOffset.x)) {
           this.mirrorX = true;
           tempPos.x -= this.moveSpeed;
         }
@@ -1459,7 +1459,7 @@ var _class = function (_Sprite) {
       if (this.GameState.Controls.pressedKeys.includes(_keyCodes.RIGHT_ARROW)) {
         this.currentAnimation = 'run';
 
-        if (this.position.x < this.GameState.Canvas.cx + this.offset.x) {
+        if (this.position.x < this.GameState.Canvas.cx + this.absoluteOffset.x) {
           this.mirrorX = false;
           tempPos.x += this.moveSpeed;
         }
@@ -1563,7 +1563,7 @@ var _class = function (_Entity) {
     key: 'calculateOffset',
     value: function calculateOffset() {
       if (!this.scale) return;
-      this.offset = new _Vector2.default(-(this.origin.x * this.dimensions.x * this.scale.x * (this.mirrorX ? -1 : 1)), -(this.origin.y * this.dimensions.y * this.scale.y * (this.mirrorY ? -1 : 1)));
+      this.absoluteOffset = new _Vector2.default(-(this.offset.x * this.dimensions.x * this.scale.x * (this.mirrorX ? -1 : 1)), -(this.offset.y * this.dimensions.y * this.scale.y * (this.mirrorY ? -1 : 1)));
     }
   }, {
     key: 'draw',
@@ -1932,7 +1932,7 @@ var _class = function () {
       play: document.querySelectorAll('[data-gamestate-play]'),
       quit: document.querySelectorAll('[data-gamestate-quit]'),
       restart: document.querySelectorAll('[data-gamestate-restart]'),
-      screens: document.querySelectorAll('[data-target-screen]')
+      screens: document.querySelectorAll('[data-ui-target-screen]')
     };
     this.isFullscreen = false;
   }
@@ -2017,7 +2017,7 @@ var _class = function () {
   }, {
     key: 'initTransitions',
     value: function initTransitions(e) {
-      this.setScreen(e.target.dataset.targetScreen);
+      this.setScreen(e.target.dataset.uiTargetScreen);
     }
   }, {
     key: 'setScreen',

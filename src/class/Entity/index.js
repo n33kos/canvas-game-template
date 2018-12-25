@@ -1,6 +1,6 @@
 /*
   Override this class to create game entities.
-  Draw canvas calls at position 0,0 as position, rotation, and origin will be applied automagically
+  Draw canvas calls at position 0,0 as position, rotation, and offset will be applied automagically
 */
 import Vector2            from 'class/Vector2';
 import worldSpaceToCanvas from 'lib/worldSpaceToCanvas';
@@ -9,19 +9,19 @@ export default class {
   constructor({
     dimensions = new Vector2(100, 100),
     GameState = null,
-    origin = new Vector2(0.5, 0.5),
+    offset = new Vector2(0.5, 0.5),
     position = new Vector2(),
     rotation = 0,
   }) {
     this.dimensions = dimensions;
     this.GameState = GameState;
-    this.origin = origin;
+    this.offset = offset;
     this.position = position;
     this.rotation = rotation;
 
     // These vars will be calculated via setPosition
     this.canvasPosition = new Vector2();
-    this.offset = new Vector2();
+    this.absoluteOffset = new Vector2();
     this.setPosition(position);
   }
 
@@ -33,17 +33,17 @@ export default class {
   }
 
   calculateOffset() {
-    this.offset = new Vector2(
-      -(this.origin.x * this.dimensions.x),
-      -(this.origin.y * this.dimensions.y),
+    this.absoluteOffset = new Vector2(
+      -(this.offset.x * this.dimensions.x),
+      -(this.offset.y * this.dimensions.y),
     );
   }
 
   drawEntity() {
-    // Move canvas, rotate, then add origin offset.
+    // Move canvas, rotate, then add offset.
     this.GameState.Canvas.ctx.translate(this.canvasPosition.x, this.canvasPosition.y);
     this.GameState.Canvas.ctx.rotate(this.rotation);
-    this.GameState.Canvas.ctx.translate(this.offset.x, this.offset.y);
+    this.GameState.Canvas.ctx.translate(this.absoluteOffset.x, this.absoluteOffset.y);
 
     this.draw();
 

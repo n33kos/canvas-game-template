@@ -35,9 +35,9 @@ export default class extends Entity {
 
   calculateOffset() {
     if (!this.scale) return;
-    this.offset = new Vector2(
-      -(this.origin.x * this.dimensions.x * this.scale.x * (this.mirrorX ? -1 : 1)),
-      -(this.origin.y * this.dimensions.y * this.scale.y * (this.mirrorY ? -1 : 1)),
+    this.absoluteOffset = new Vector2(
+      -(this.offset.x * this.dimensions.x * this.scale.x * (this.mirrorX ? -1 : 1)),
+      -(this.offset.y * this.dimensions.y * this.scale.y * (this.mirrorY ? -1 : 1)),
     );
   }
 

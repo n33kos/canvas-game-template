@@ -39,12 +39,31 @@ canvas {
   width: 100%;
   z-index: 10;
 }
-.UserInterface [data-screen] {
+
+[data-screen] {
   opacity: 0;
   pointer-events: none;
   transition: all 1s ease;
 }
-.UserInterface [data-screen].active {
+[data-screen].active {
   opacity: 1;
   pointer-events: auto;
+}
+
+[data-screen] {
+  background: rgba(255, 255, 255, 0.2);
+  height: 200px;
+  left: 50%;
+  position: absolute;
+  top: 50%;
+  -webkit-transform: translate(-50%, -50%);
+          transform: translate(-50%, -50%);
+  width: 200px;
+}
+
+[data-screen=game] {
+  top: 0;
+  left: 0;
+  -webkit-transform: none;
+          transform: none;
 }
