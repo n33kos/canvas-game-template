@@ -486,11 +486,11 @@ document.addEventListener("DOMContentLoaded", function (e) {
   // Audio needs to be initialized after user input, refer to UI class for init() call
   GameState.Audio = new newGame.Audio(GameState);
 
-  GameState.Controls = new newGame.Controls(GameState);
-  GameState.Controls.init();
-
   GameState.Canvas = new newGame.Canvas(GameState);
   GameState.Canvas.init();
+
+  GameState.Controls = new newGame.Controls(GameState);
+  GameState.Controls.init();
 
   GameState.Scene = new newGame.Scene(GameState);
   GameState.Scene.init();
@@ -692,7 +692,7 @@ var _class = function () {
         return _this.handleMouseDown(e);
       });
       document.addEventListener("mouseup", function (e) {
-        _this.isMouseDown = false;
+        return _this.handleMouseUp(e);
       });
 
       // Touch
@@ -703,42 +703,59 @@ var _class = function () {
         return _this.handleTouchStart(e);
       });
       document.addEventListener("touchend", function (e) {
-        _this.isMouseDown = false;
+        return _this.handleTouchEnd(e);
       });
 
       // Keys
       document.onkeydown = this.handleKeyDown.bind(this);
       document.onkeyup = this.handleKeyUp.bind(this);
     }
+
+    // -----Touch-----
+
   }, {
     key: 'handleTouchStart',
     value: function handleTouchStart(e) {
+      this.setLastPosition(e);
       this.isMouseDown = true;
-
-      this.lastPosition = new _Vector2.default(e.targetTouches[0].clientX, e.targetTouches[0].clientY);
+    }
+  }, {
+    key: 'handleTouchEnd',
+    value: function handleTouchEnd(e) {
+      this.setLastPosition(e);
+      this.isMouseDown = false;
     }
   }, {
     key: 'handleTouchMove',
     value: function handleTouchMove(e) {
       e.preventDefault();
       if (!this.isMouseDown || this.GameState.isPaused) return;
-
-      this.lastPosition = new _Vector2.default(e.targetTouches[0].clientX, e.targetTouches[0].clientY);
+      this.setLastPosition(e);
     }
+
+    // -----Mouse-----
+
   }, {
     key: 'handleMouseDown',
     value: function handleMouseDown(e) {
+      this.setLastPosition(e);
       this.isMouseDown = true;
-
-      this.lastPosition = new _Vector2.default(e.clientX, e.clientY);
+    }
+  }, {
+    key: 'handleMouseUp',
+    value: function handleMouseUp(e) {
+      this.setLastPosition(e);
+      this.isMouseDown = false;
     }
   }, {
     key: 'handleMouseMove',
     value: function handleMouseMove(e) {
       if (!this.isMouseDown || this.GameState.isPaused) return;
-
-      this.lastPosition = new _Vector2.default(e.clientX, e.clientY);
+      this.setLastPosition(e);
     }
+
+    // -----Keypresses------
+
   }, {
     key: 'handleKeyDown',
     value: function handleKeyDown(e) {
@@ -749,6 +766,17 @@ var _class = function () {
     value: function handleKeyUp(e) {
       var index = this.pressedKeys.indexOf(e.keyCode);
       if (index > -1) this.pressedKeys.splice(index, 1);
+    }
+  }, {
+    key: 'setLastPosition',
+    value: function setLastPosition(e) {
+      if ('clientX' in e) {
+        this.lastPosition = new _Vector2.default(e.clientX * this.GameState.Canvas.scale, e.clientY * this.GameState.Canvas.scale);
+      }
+
+      if ('targetTouches' in e) {
+        this.lastPosition = new _Vector2.default(e.targetTouches[0].clientX * this.GameState.Canvas.scale, e.targetTouches[0].clientY * this.GameState.Canvas.scale);
+      }
     }
   }]);
 
@@ -1155,29 +1183,33 @@ var _class = function (_Level) {
 
       this.GameState.Scene.clear();
       this.audioNodes = [];
+      this.grid = [];
 
-      var cellSize = this.GameState.Canvas.width / 8;
-      var xScale = Math.floor(this.GameState.Canvas.width / cellSize);
-      var yScale = Math.floor(this.GameState.Canvas.height / cellSize);
+      this.rows = 8;
+      this.columns = 6;
+      this.minDimension = Math.min(this.GameState.Canvas.width, this.GameState.Canvas.height);
+      this.minimumPadding = 200;
+      this.cellSize = (this.minDimension - this.minimumPadding) / this.rows;
+      this.padding = new _Vector2.default((this.GameState.Canvas.width - this.cellSize * this.rows) / 2, (this.GameState.Canvas.height - this.cellSize * this.columns) / 2);
 
-      for (var y = 0; y <= yScale; y++) {
-        for (var x = 0; x <= xScale; x++) {
+      for (var y = 0; y < this.columns; y++) {
+        for (var x = 0; x < this.rows; x++) {
           var cell = new _Cell2.default({
             GameState: this.GameState,
-            strokeStyle: 'gray',
+            strokeStyle: '#ccc',
+            fillStyle: 'white',
             lineWidth: 2,
-            dimensions: new _Vector2.default(cellSize, cellSize),
+            dimensions: new _Vector2.default(this.cellSize, this.cellSize),
             id: x + '_' + y,
             x: x,
             y: y
           });
-          cell.position = new _Vector2.default(x * cellSize, y * cellSize);
+          cell.position = new _Vector2.default(x * this.cellSize + this.padding.x, y * this.cellSize + this.padding.y);
 
           this.GameState.Scene.add(cell);
+          this.grid.push(cell);
         }
       }
-
-      this.GameState.Scene.entities = this.GameState.Scene.entities.reverse();
 
       this.GameState.Scene.entities.forEach(function (cell) {
         cell.init(_this2.GameState.Scene.entities);
@@ -1186,7 +1218,27 @@ var _class = function (_Level) {
   }, {
     key: 'gameLogic',
     value: function gameLogic() {
-      // Override this function to add level specific game logic
+      this.handleControls();
+    }
+  }, {
+    key: 'handleControls',
+    value: function handleControls() {
+      if (!this.wasMouseDown && this.GameState.Controls.isMouseDown) this.wasMouseDown = true;
+      if (this.wasMouseDown && !this.GameState.Controls.isMouseDown) {
+        this.wasMouseDown = false;
+
+        var clickedCell = this.getClickedCell(this.GameState.Controls.lastPosition);
+        if (clickedCell) clickedCell.rotateCell(1);
+      }
+    }
+  }, {
+    key: 'getClickedCell',
+    value: function getClickedCell(position) {
+      var x = Math.floor((position.x - this.padding.x) / this.cellSize);
+      var y = Math.floor((position.y - this.padding.y) / this.cellSize);
+      return this.grid.find(function (cell) {
+        return cell.id === x + '_' + y;
+      });
     }
   }]);
 
@@ -1233,6 +1285,7 @@ var _class = function (_Entity) {
     var _this = _possibleConstructorReturn(this, (_class.__proto__ || Object.getPrototypeOf(_class)).call(this, config));
 
     var strokeStyle = config.strokeStyle,
+        fillStyle = config.fillStyle,
         lineWidth = config.lineWidth,
         x = config.x,
         y = config.y,
@@ -1240,6 +1293,7 @@ var _class = function (_Entity) {
 
 
     _this.strokeStyle = strokeStyle;
+    _this.fillStyle = fillStyle;
     _this.lineWidth = lineWidth;
     _this.x = x;
     _this.y = y;
@@ -1292,26 +1346,7 @@ var _class = function (_Entity) {
     }
   }, {
     key: 'update',
-    value: function update() {
-      this.handleControls();
-    }
-  }, {
-    key: 'handleControls',
-    value: function handleControls() {
-      if (!this.wasMouseDown && this.GameState.Controls.isMouseDown) this.wasMouseDown = true;
-      if (this.wasMouseDown && !this.GameState.Controls.isMouseDown) {
-        this.wasMouseDown = false;
-
-        if (this.isWithinCell(this.GameState.Controls.lastPosition)) {
-          this.rotateCell(1);
-        }
-      }
-    }
-  }, {
-    key: 'isWithinCell',
-    value: function isWithinCell(position) {
-      return Math.floor(position.x * window.devicePixelRatio / this.dimensions.x) === this.x && Math.floor(position.y * window.devicePixelRatio / this.dimensions.y) === this.y;
-    }
+    value: function update() {}
   }, {
     key: 'rotateCell',
     value: function rotateCell(direction) {

@@ -7,6 +7,7 @@ export default class extends Entity {
 
     const {
       strokeStyle,
+      fillStyle,
       lineWidth,
       x,
       y,
@@ -14,6 +15,7 @@ export default class extends Entity {
     } = config;
 
     this.strokeStyle = strokeStyle;
+    this.fillStyle = fillStyle;
     this.lineWidth = lineWidth;
     this.x = x;
     this.y = y;
@@ -52,23 +54,6 @@ export default class extends Entity {
   }
 
   update() {
-    this.handleControls();
-  }
-
-  handleControls() {
-    if (!this.wasMouseDown && this.GameState.Controls.isMouseDown) this.wasMouseDown = true;
-    if (this.wasMouseDown && !this.GameState.Controls.isMouseDown) {
-      this.wasMouseDown = false;
-
-      if (this.isWithinCell(this.GameState.Controls.lastPosition)) {
-        this.rotateCell(1);
-      }
-    }
-  }
-
-  isWithinCell(position) {
-    return (Math.floor((position.x * window.devicePixelRatio) / this.dimensions.x) === this.x
-      && Math.floor((position.y * window.devicePixelRatio) / this.dimensions.y) === this.y);
   }
 
   rotateCell(direction) {
