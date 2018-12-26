@@ -770,9 +770,9 @@ Object.defineProperty(exports, "__esModule", {
 
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
-var _defaultConfig = __webpack_require__(10);
+var _gameState = __webpack_require__(10);
 
-var defaultConfig = _interopRequireWildcard(_defaultConfig);
+var defaultConfig = _interopRequireWildcard(_gameState);
 
 var _levels = __webpack_require__(11);
 
@@ -795,6 +795,7 @@ var _class = function () {
     this.levels = [];
     this.score = 0;
     this.playerName = defaultConfig.playerName;
+
     /*
       Class variables added in loader :
       - this.Audio

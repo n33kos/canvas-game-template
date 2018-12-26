@@ -1,4 +1,4 @@
-import * as defaultConfig from 'config/defaultConfig';
+import * as defaultConfig from 'config/gameState';
 import levels             from 'config/levels';
 
 export default class {
@@ -10,6 +10,7 @@ export default class {
     this.levels = [];
     this.score = 0;
     this.playerName = defaultConfig.playerName;
+
     /*
       Class variables added in loader :
       - this.Audio
