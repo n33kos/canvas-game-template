@@ -13,12 +13,12 @@ export default class {
   init() {
     // Mouse
     document.addEventListener("mousemove", throttle(this.debounceValue, (e) => this.handleMouseMove(e)));
-    document.addEventListener("mousedown", this.handleMouseDown);
+    document.addEventListener("mousedown", (e) => this.handleMouseDown(e));
     document.addEventListener("mouseup", e => { this.isMouseDown = false; });
 
     // Touch
     document.addEventListener('touchmove', throttle(this.debounceValue, (e) => this.handleTouchMove(e)));
-    document.addEventListener('touchstart', this.handleTouchStart);
+    document.addEventListener('touchstart', (e) => this.handleTouchStart(e));
     document.addEventListener("touchend", e => { this.isMouseDown = false; });
 
     // Keys
