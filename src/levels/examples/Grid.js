@@ -1,7 +1,7 @@
 import Level       from 'class/Level';
 import randomRange from 'lib/randomRange';
 import Vector2     from 'class/Vector2';
-import Cell        from 'gameObjects/Cell';
+import Cell        from 'gameObjects/examples/Cell';
 
 export default class extends Level {
   constructor(config) {

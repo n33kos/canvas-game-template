@@ -1,4 +1,4 @@
-import ColorCube   from 'gameObjects/ColorCube';
+import ColorCube   from 'gameObjects/examples/ColorCube';
 import Level       from 'class/Level';
 import randomRange from 'lib/randomRange';
 import Vector2     from 'class/Vector2';

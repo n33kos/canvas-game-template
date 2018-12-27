@@ -1,9 +1,9 @@
 import AudioBuffer      from 'class/AudioBuffer';
 import Background       from 'class/Background';
 import Level            from 'class/Level';
-import NonLoopingSprite from 'gameObjects/NonLoopingSprite';
+import NonLoopingSprite from 'gameObjects/examples/NonLoopingSprite';
 import randomRange      from 'lib/randomRange';
-import RunningMan       from 'gameObjects/RunningMan';
+import RunningMan       from 'gameObjects/examples/RunningMan';
 import Vector2          from 'class/Vector2';
 
 export default class extends Level {

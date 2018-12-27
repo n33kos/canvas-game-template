@@ -1,6 +1,6 @@
-import ColorCubes from 'levels/ColorCubes';
-import Grid       from 'levels/Grid';
-import Sprites    from 'levels/Sprites';
+import ColorCubes from 'levels/examples/ColorCubes';
+import Grid       from 'levels/examples/Grid';
+import Sprites    from 'levels/examples/Sprites';
 
 export default [
   Grid,
