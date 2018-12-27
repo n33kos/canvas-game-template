@@ -7,7 +7,7 @@ export default class extends Entity {
 
     const {
       animations,
-      currentFrame = 1,
+      currentFrame = 0,
       currentAnimation = null,
       mirrorX = false,
       mirrorY = false,
@@ -15,6 +15,16 @@ export default class extends Entity {
     } = config;
 
     this.animations = animations;
+    /*
+      animations is an array of animation objects with the following options:
+      jump : {
+        frames        : 12,
+        loop          : true,
+        spriteSheet   : './img/idle.png',
+        ticksPerFrame : 4,
+      }
+    */
+
     this.currentAnimation = currentAnimation;
     this.currentFrame = currentFrame;
     this.scale = scale;
@@ -70,16 +80,40 @@ export default class extends Entity {
   handleFrames() {
     // repeat animations
     this.tickCounter++;
-    if (this.tickCounter > this.animations[this.currentAnimation].ticksPerFrame) {
-      this.tickCounter = 0;
-      this.currentFrame += 1;
-      if (this.currentFrame >= this.animations[this.currentAnimation].frames) this.currentFrame = 1;
+
+    // Loop Logic
+    if (this.animations[this.currentAnimation].loop) {
+      this.incrementAnimationFrame();
+
+      // Reset to first frame
+      if (this.currentFrame >= this.animations[this.currentAnimation].frames) {
+        this.currentFrame = 0;
+      }
+    }
+
+    // No-loop Logic
+    if (!this.animations[this.currentAnimation].loop) {
+      if (this.currentFrame >= this.animations[this.currentAnimation].frames - 1) {
+        this.tickCounter = 0;
+        this.currentFrame = this.animations[this.currentAnimation].frames - 1;
+      } else {
+        this.incrementAnimationFrame();
+      }
     }
 
     // Reset to first frame on animation switch
     if (this.lastAnimation !== this.currentAnimation) {
       this.lastAnimation = this.currentAnimation;
-      this.currentFrame = 1;
+      this.currentFrame = 0;
+      this.tickCounter = 0;
+    }
+  }
+
+  incrementAnimationFrame() {
+    // Increment frame and reset tickCounter
+    if (this.tickCounter > this.animations[this.currentAnimation].ticksPerFrame) {
+      this.tickCounter = 0;
+      this.currentFrame += 1;
     }
   }
 }

@@ -1,4 +1,3 @@
-
 import Sprite  from 'class/Sprite';
 import Vector2 from 'class/Vector2';
 import {
@@ -14,18 +13,21 @@ export default class extends Sprite {
     this.moveSpeed = 6;
     this.animations = {
       idle : {
-        spriteSheet   : './img/idle.png',
         frames        : 12,
+        loop          : true,
+        spriteSheet   : './img/idle.png',
         ticksPerFrame : 4,
       },
       run : {
-        spriteSheet   : './img/run.png',
         frames        : 8,
+        loop          : true,
+        spriteSheet   : './img/run.png',
         ticksPerFrame : 4,
       },
       jump : {
-        spriteSheet   : './img/jump.png',
         frames        : 4,
+        loop          : true,
+        spriteSheet   : './img/jump.png',
         ticksPerFrame : 12,
       },
     };

@@ -1,9 +1,10 @@
-import AudioBuffer from 'class/AudioBuffer';
-import Background  from 'class/Background';
-import Level       from 'class/Level';
-import randomRange from 'lib/randomRange';
-import RunningMan  from 'gameObjects/RunningMan';
-import Vector2     from 'class/Vector2';
+import AudioBuffer      from 'class/AudioBuffer';
+import Background       from 'class/Background';
+import Level            from 'class/Level';
+import NonLoopingSprite from 'gameObjects/NonLoopingSprite';
+import randomRange      from 'lib/randomRange';
+import RunningMan       from 'gameObjects/RunningMan';
+import Vector2          from 'class/Vector2';
 
 export default class extends Level {
   constructor(config) {
@@ -19,6 +20,7 @@ export default class extends Level {
     this.addBGMusic();
     this.addGround();
     this.addCharacter();
+    this.addNonLoopingSprite();
   }
 
   addBGMusic() {
@@ -43,6 +45,16 @@ export default class extends Level {
     runner.setPosition(new Vector2(0, -this.GameState.Canvas.cy + 320));
     runner.load();
     this.GameState.Scene.add(runner);
+  }
+
+  addNonLoopingSprite() {
+    const nonlooper = new NonLoopingSprite({
+      GameState: this.GameState,
+      dimensions: new Vector2(32, 32),
+      scale: new Vector2(10, 10),
+    });
+    nonlooper.load();
+    this.GameState.Scene.add(nonlooper);
   }
 
   addGround() {
