@@ -1,7 +1,8 @@
 export default class {
   constructor() {
-    this.isLoaded = false;
+    this.name = 'Default Level';
     this.audioNodes = [];
+    this.controlCallbackIds = [];
   }
 
   init(GameState) {
@@ -9,7 +10,9 @@ export default class {
   }
 
   load() {
-    this.isLoaded = true;
+  }
+
+  unLoad() {
   }
 
   gameLogic() {

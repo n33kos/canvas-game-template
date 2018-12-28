@@ -14,6 +14,7 @@ export default class extends Level {
     this.GameState.Scene.clear();
     this.audioNodes = [];
     this.grid = [];
+    this.controlCallbackIds = [];
 
     this.rows = 8;
     this.columns = 6;
@@ -53,20 +54,18 @@ export default class extends Level {
     this.GameState.Scene.entities.forEach( cell => {
       cell.init(this.GameState.Scene.entities);
     });
+
+    this.controlCallbackIds.push(
+      this.GameState.Controls.addCallback('mouseUp', this.handleClick.bind(this)),
+    );
   }
 
   gameLogic() {
-    this.handleControls();
   }
 
-  handleControls() {
-    if (!this.wasMouseDown && this.GameState.Controls.isMouseDown) this.wasMouseDown = true;
-    if (this.wasMouseDown && !this.GameState.Controls.isMouseDown) {
-      this.wasMouseDown = false;
-
-      const clickedCell = this.getClickedCell(this.GameState.Controls.lastPosition);
-      if (clickedCell) clickedCell.rotateCell(1);
-    }
+  handleClick(e) {
+    const clickedCell = this.getClickedCell(this.GameState.Controls.lastPosition);
+    if (clickedCell) clickedCell.rotateCell(1);
   }
 
   getClickedCell(position) {

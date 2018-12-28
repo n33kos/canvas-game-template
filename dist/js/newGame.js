@@ -91,7 +91,7 @@ return /******/ (function(modules) { // webpackBootstrap
 /******/
 /******/
 /******/ 	// Load entry module and return exports
-/******/ 	return __webpack_require__(__webpack_require__.s = 6);
+/******/ 	return __webpack_require__(__webpack_require__.s = 7);
 /******/ })
 /************************************************************************/
 /******/ ([
@@ -143,6 +143,53 @@ Object.defineProperty(exports, "__esModule", {
   value: true
 });
 
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+var _class = function () {
+  function _class() {
+    _classCallCheck(this, _class);
+
+    this.name = 'Default Level';
+    this.audioNodes = [];
+    this.controlCallbackIds = [];
+  }
+
+  _createClass(_class, [{
+    key: 'init',
+    value: function init(GameState) {
+      this.GameState = GameState;
+    }
+  }, {
+    key: 'load',
+    value: function load() {}
+  }, {
+    key: 'unLoad',
+    value: function unLoad() {}
+  }, {
+    key: 'gameLogic',
+    value: function gameLogic() {
+      // Override this function to add level specific game logic
+    }
+  }]);
+
+  return _class;
+}();
+
+exports.default = _class;
+
+/***/ }),
+/* 2 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }(); /*
                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        Override this class to create game entities.
                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        Draw canvas calls at position 0,0 as position, rotation, and offset will be applied automagically
@@ -153,7 +200,7 @@ var _Vector = __webpack_require__(0);
 
 var _Vector2 = _interopRequireDefault(_Vector);
 
-var _worldSpaceToCanvas = __webpack_require__(15);
+var _worldSpaceToCanvas = __webpack_require__(19);
 
 var _worldSpaceToCanvas2 = _interopRequireDefault(_worldSpaceToCanvas);
 
@@ -225,51 +272,6 @@ var _class = function () {
     key: 'draw',
     value: function draw() {
       // Override this function for the entity's draw loop
-    }
-  }]);
-
-  return _class;
-}();
-
-exports.default = _class;
-
-/***/ }),
-/* 2 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-
-Object.defineProperty(exports, "__esModule", {
-  value: true
-});
-
-var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
-
-function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
-
-var _class = function () {
-  function _class() {
-    _classCallCheck(this, _class);
-
-    this.isLoaded = false;
-    this.audioNodes = [];
-  }
-
-  _createClass(_class, [{
-    key: "init",
-    value: function init(GameState) {
-      this.GameState = GameState;
-    }
-  }, {
-    key: "load",
-    value: function load() {
-      this.isLoaded = true;
-    }
-  }, {
-    key: "gameLogic",
-    value: function gameLogic() {
-      // Override this function to add level specific game logic
     }
   }]);
 
@@ -434,13 +436,50 @@ exports.debounce = debounce;
 "use strict";
 
 
+var rng = __webpack_require__(12);
+var bytesToUuid = __webpack_require__(13);
+
+function v4(options, buf, offset) {
+  var i = buf && offset || 0;
+
+  if (typeof options == 'string') {
+    buf = options === 'binary' ? new Array(16) : null;
+    options = null;
+  }
+  options = options || {};
+
+  var rnds = options.random || (options.rng || rng)();
+
+  // Per 4.4, set bits for version and `clock_seq_hi_and_reserved`
+  rnds[6] = rnds[6] & 0x0f | 0x40;
+  rnds[8] = rnds[8] & 0x3f | 0x80;
+
+  // Copy bytes to buffer, if provided
+  if (buf) {
+    for (var ii = 0; ii < 16; ++ii) {
+      buf[i + ii] = rnds[ii];
+    }
+  }
+
+  return buf || bytesToUuid(rnds);
+}
+
+module.exports = v4;
+
+/***/ }),
+/* 6 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
 
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
-var _Entity2 = __webpack_require__(1);
+var _Entity2 = __webpack_require__(2);
 
 var _Entity3 = _interopRequireDefault(_Entity2);
 
@@ -580,41 +619,41 @@ var _class = function (_Entity) {
 exports.default = _class;
 
 /***/ }),
-/* 6 */
+/* 7 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
 
 
-var _Audio = __webpack_require__(7);
+var _Audio = __webpack_require__(8);
 
 var _Audio2 = _interopRequireDefault(_Audio);
 
-var _Canvas = __webpack_require__(8);
+var _Canvas = __webpack_require__(9);
 
 var _Canvas2 = _interopRequireDefault(_Canvas);
 
-var _Controls = __webpack_require__(9);
+var _Controls = __webpack_require__(10);
 
 var _Controls2 = _interopRequireDefault(_Controls);
 
-var _GameState = __webpack_require__(10);
+var _GameState = __webpack_require__(14);
 
 var _GameState2 = _interopRequireDefault(_GameState);
 
-var _Render = __webpack_require__(24);
+var _Render = __webpack_require__(28);
 
 var _Render2 = _interopRequireDefault(_Render);
 
-var _Scene = __webpack_require__(25);
+var _Scene = __webpack_require__(29);
 
 var _Scene2 = _interopRequireDefault(_Scene);
 
-var _UI = __webpack_require__(29);
+var _UI = __webpack_require__(30);
 
 var _UI2 = _interopRequireDefault(_UI);
 
-var _Update = __webpack_require__(30);
+var _Update = __webpack_require__(31);
 
 var _Update2 = _interopRequireDefault(_Update);
 
@@ -658,7 +697,7 @@ document.addEventListener("DOMContentLoaded", function (e) {
 });
 
 /***/ }),
-/* 7 */
+/* 8 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -712,7 +751,7 @@ var _class = function () {
 exports.default = _class;
 
 /***/ }),
-/* 8 */
+/* 9 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -798,7 +837,7 @@ var _class = function () {
 exports.default = _class;
 
 /***/ }),
-/* 9 */
+/* 10 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -812,6 +851,10 @@ var _createClass = function () { function defineProperties(target, props) { for 
 
 var _throttleDebounce = __webpack_require__(4);
 
+var _controls = __webpack_require__(11);
+
+var _controls2 = _interopRequireDefault(_controls);
+
 var _Vector = __webpack_require__(0);
 
 var _Vector2 = _interopRequireDefault(_Vector);
@@ -819,6 +862,8 @@ var _Vector2 = _interopRequireDefault(_Vector);
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+var uuidv4 = __webpack_require__(5);
 
 var _class = function () {
   function _class(GameState) {
@@ -829,9 +874,35 @@ var _class = function () {
     this.lastPosition = null;
     this.pressedKeys = [];
     this.debounceValue = 10;
+
+    // refer to `config/controls` for callback event names
+    this.callbacks = _controls2.default.callbacks;
   }
 
   _createClass(_class, [{
+    key: 'addCallback',
+    value: function addCallback(eventKey, callBack) {
+      var newUUID = uuidv4();
+      this.callbacks[eventKey].push({
+        uuid: newUUID,
+        callBack: callBack
+      });
+
+      return newUUID;
+    }
+  }, {
+    key: 'clearCallbacks',
+    value: function clearCallbacks() {
+      this.callbacks = _controls2.default.callbacks;
+    }
+  }, {
+    key: 'removeCallback',
+    value: function removeCallback(eventKey, callBackUUID) {
+      this.callbacks[eventKey] = this.callbacks[eventKey].filter(function (callback) {
+        return callback.uuid !== callBackUUID;
+      });
+    }
+  }, {
     key: 'init',
     value: function init() {
       var _this = this;
@@ -870,12 +941,22 @@ var _class = function () {
     value: function handleTouchStart(e) {
       this.setLastPosition(e);
       this.isMouseDown = true;
+
+      this.callbacks['touchStart'].forEach(function (_ref) {
+        var callBack = _ref.callBack;
+        return callBack(e);
+      });
     }
   }, {
     key: 'handleTouchEnd',
     value: function handleTouchEnd(e) {
       this.setLastPosition(e);
       this.isMouseDown = false;
+
+      this.callbacks['touchEnd'].forEach(function (_ref2) {
+        var callBack = _ref2.callBack;
+        return callBack(e);
+      });
     }
   }, {
     key: 'handleTouchMove',
@@ -883,6 +964,11 @@ var _class = function () {
       e.preventDefault();
       if (!this.isMouseDown || this.GameState.isPaused) return;
       this.setLastPosition(e);
+
+      this.callbacks['touchMove'].forEach(function (_ref3) {
+        var callBack = _ref3.callBack;
+        return callBack(e);
+      });
     }
 
     // -----Mouse-----
@@ -892,18 +978,33 @@ var _class = function () {
     value: function handleMouseDown(e) {
       this.setLastPosition(e);
       this.isMouseDown = true;
+
+      this.callbacks['mouseDown'].forEach(function (_ref4) {
+        var callBack = _ref4.callBack;
+        return callBack(e);
+      });
     }
   }, {
     key: 'handleMouseUp',
     value: function handleMouseUp(e) {
       this.setLastPosition(e);
       this.isMouseDown = false;
+
+      this.callbacks['mouseUp'].forEach(function (_ref5) {
+        var callBack = _ref5.callBack;
+        return callBack(e);
+      });
     }
   }, {
     key: 'handleMouseMove',
     value: function handleMouseMove(e) {
       if (!this.isMouseDown || this.GameState.isPaused) return;
       this.setLastPosition(e);
+
+      this.callbacks['mouseMove'].forEach(function (_ref6) {
+        var callBack = _ref6.callBack;
+        return callBack(e);
+      });
     }
 
     // -----Keypresses------
@@ -912,12 +1013,22 @@ var _class = function () {
     key: 'handleKeyDown',
     value: function handleKeyDown(e) {
       if (!this.pressedKeys.includes(e.keyCode)) this.pressedKeys.push(e.keyCode);
+
+      this.callbacks['keyDown'].forEach(function (_ref7) {
+        var callBack = _ref7.callBack;
+        return callBack(e);
+      });
     }
   }, {
     key: 'handleKeyUp',
     value: function handleKeyUp(e) {
       var index = this.pressedKeys.indexOf(e.keyCode);
       if (index > -1) this.pressedKeys.splice(index, 1);
+
+      this.callbacks['keyUp'].forEach(function (_ref8) {
+        var callBack = _ref8.callBack;
+        return callBack(e);
+      });
     }
   }, {
     key: 'setLastPosition',
@@ -938,7 +1049,96 @@ var _class = function () {
 exports.default = _class;
 
 /***/ }),
-/* 10 */
+/* 11 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.default = {
+  callbacks: {
+    mouseDown: [],
+    mouseUp: [],
+    mouseMove: [],
+    touchStart: [],
+    touchEnd: [],
+    touchMove: [],
+    keyDown: [],
+    keyUp: []
+  }
+};
+
+/***/ }),
+/* 12 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+// Unique ID creation requires a high quality random # generator.  In the
+// browser this is a little complicated due to unknown quality of Math.random()
+// and inconsistent support for the `crypto` API.  We do the best we can via
+// feature-detection
+
+// getRandomValues needs to be invoked in a context where "this" is a Crypto
+// implementation. Also, find the complete implementation of crypto on IE11.
+var getRandomValues = typeof crypto != 'undefined' && crypto.getRandomValues && crypto.getRandomValues.bind(crypto) || typeof msCrypto != 'undefined' && typeof window.msCrypto.getRandomValues == 'function' && msCrypto.getRandomValues.bind(msCrypto);
+
+if (getRandomValues) {
+  // WHATWG crypto RNG - http://wiki.whatwg.org/wiki/Crypto
+  var rnds8 = new Uint8Array(16); // eslint-disable-line no-undef
+
+  module.exports = function whatwgRNG() {
+    getRandomValues(rnds8);
+    return rnds8;
+  };
+} else {
+  // Math.random()-based (RNG)
+  //
+  // If all else fails, use Math.random().  It's fast, but is of unspecified
+  // quality.
+  var rnds = new Array(16);
+
+  module.exports = function mathRNG() {
+    for (var i = 0, r; i < 16; i++) {
+      if ((i & 0x03) === 0) r = Math.random() * 0x100000000;
+      rnds[i] = r >>> ((i & 0x03) << 3) & 0xff;
+    }
+
+    return rnds;
+  };
+}
+
+/***/ }),
+/* 13 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+/**
+ * Convert array of 16 byte values to UUID string format of the form:
+ * XXXXXXXX-XXXX-XXXX-XXXX-XXXXXXXXXXXX
+ */
+var byteToHex = [];
+for (var i = 0; i < 256; ++i) {
+  byteToHex[i] = (i + 0x100).toString(16).substr(1);
+}
+
+function bytesToUuid(buf, offset) {
+  var i = offset || 0;
+  var bth = byteToHex;
+  // join used to fix memory issue caused by concatenation: https://bugs.chromium.org/p/v8/issues/detail?id=3175#c4
+  return [bth[buf[i++]], bth[buf[i++]], bth[buf[i++]], bth[buf[i++]], '-', bth[buf[i++]], bth[buf[i++]], '-', bth[buf[i++]], bth[buf[i++]], '-', bth[buf[i++]], bth[buf[i++]], '-', bth[buf[i++]], bth[buf[i++]], bth[buf[i++]], bth[buf[i++]], bth[buf[i++]], bth[buf[i++]]].join('');
+}
+
+module.exports = bytesToUuid;
+
+/***/ }),
+/* 14 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -950,11 +1150,15 @@ Object.defineProperty(exports, "__esModule", {
 
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
-var _gameState = __webpack_require__(11);
+var _gameState = __webpack_require__(15);
 
 var defaultConfig = _interopRequireWildcard(_gameState);
 
-var _levels = __webpack_require__(12);
+var _Level = __webpack_require__(1);
+
+var _Level2 = _interopRequireDefault(_Level);
+
+var _levels = __webpack_require__(16);
 
 var _levels2 = _interopRequireDefault(_levels);
 
@@ -975,6 +1179,7 @@ var _class = function () {
     this.levels = [];
     this.score = 0;
     this.playerName = defaultConfig.playerName;
+    this.currentLevel = new _Level2.default({ GameState: this });
 
     /*
       Class variables added in loader :
@@ -1007,8 +1212,14 @@ var _class = function () {
   }, {
     key: 'loadLevel',
     value: function loadLevel() {
-      var level = this.levels[this.level];
-      level.load();
+      var newLevel = this.levels[this.level];
+
+      // unload level if one was already loaded
+      if (this.currentLevel) this.currentLevel.unLoad();
+
+      // load level
+      newLevel.load();
+      this.currentLevel = newLevel;
 
       // Remove focus from any UI elements clicked to prevent control misdirection
       document.activeElement.blur();
@@ -1026,7 +1237,7 @@ var _class = function () {
       if (response == true) {
         this.endGame();
         this.UI.setScreen('level');
-        this.levels[this.level].audioNodes.forEach(function (audioNode) {
+        this.currentLevel.audioNodes.forEach(function (audioNode) {
           audioNode.stop(0);
         });
       }
@@ -1062,7 +1273,7 @@ var _class = function () {
 exports.default = _class;
 
 /***/ }),
-/* 11 */
+/* 15 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -1076,7 +1287,7 @@ exports.default = {
 };
 
 /***/ }),
-/* 12 */
+/* 16 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -1086,15 +1297,15 @@ Object.defineProperty(exports, "__esModule", {
   value: true
 });
 
-var _ColorCubes = __webpack_require__(13);
+var _ColorCubes = __webpack_require__(17);
 
 var _ColorCubes2 = _interopRequireDefault(_ColorCubes);
 
-var _Grid = __webpack_require__(16);
+var _Grid = __webpack_require__(20);
 
 var _Grid2 = _interopRequireDefault(_Grid);
 
-var _Sprites = __webpack_require__(18);
+var _Sprites = __webpack_require__(22);
 
 var _Sprites2 = _interopRequireDefault(_Sprites);
 
@@ -1103,7 +1314,7 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 exports.default = [_Grid2.default, _Sprites2.default, _ColorCubes2.default];
 
 /***/ }),
-/* 13 */
+/* 17 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -1115,11 +1326,11 @@ Object.defineProperty(exports, "__esModule", {
 
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
-var _ColorCube = __webpack_require__(14);
+var _ColorCube = __webpack_require__(18);
 
 var _ColorCube2 = _interopRequireDefault(_ColorCube);
 
-var _Level2 = __webpack_require__(2);
+var _Level2 = __webpack_require__(1);
 
 var _Level3 = _interopRequireDefault(_Level2);
 
@@ -1181,7 +1392,7 @@ var _class = function (_Level) {
 exports.default = _class;
 
 /***/ }),
-/* 14 */
+/* 18 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -1193,7 +1404,7 @@ Object.defineProperty(exports, "__esModule", {
 
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
-var _Entity2 = __webpack_require__(1);
+var _Entity2 = __webpack_require__(2);
 
 var _Entity3 = _interopRequireDefault(_Entity2);
 
@@ -1259,7 +1470,7 @@ var _class = function (_Entity) {
 exports.default = _class;
 
 /***/ }),
-/* 15 */
+/* 19 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -1280,7 +1491,7 @@ exports.default = function (GameState, position) {
 };
 
 /***/ }),
-/* 16 */
+/* 20 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -1292,7 +1503,7 @@ Object.defineProperty(exports, "__esModule", {
 
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
-var _Level2 = __webpack_require__(2);
+var _Level2 = __webpack_require__(1);
 
 var _Level3 = _interopRequireDefault(_Level2);
 
@@ -1304,7 +1515,7 @@ var _Vector = __webpack_require__(0);
 
 var _Vector2 = _interopRequireDefault(_Vector);
 
-var _Cell = __webpack_require__(17);
+var _Cell = __webpack_require__(21);
 
 var _Cell2 = _interopRequireDefault(_Cell);
 
@@ -1336,6 +1547,7 @@ var _class = function (_Level) {
       this.GameState.Scene.clear();
       this.audioNodes = [];
       this.grid = [];
+      this.controlCallbackIds = [];
 
       this.rows = 8;
       this.columns = 6;
@@ -1366,22 +1578,17 @@ var _class = function (_Level) {
       this.GameState.Scene.entities.forEach(function (cell) {
         cell.init(_this2.GameState.Scene.entities);
       });
+
+      this.controlCallbackIds.push(this.GameState.Controls.addCallback('mouseUp', this.handleClick.bind(this)));
     }
   }, {
     key: 'gameLogic',
-    value: function gameLogic() {
-      this.handleControls();
-    }
+    value: function gameLogic() {}
   }, {
-    key: 'handleControls',
-    value: function handleControls() {
-      if (!this.wasMouseDown && this.GameState.Controls.isMouseDown) this.wasMouseDown = true;
-      if (this.wasMouseDown && !this.GameState.Controls.isMouseDown) {
-        this.wasMouseDown = false;
-
-        var clickedCell = this.getClickedCell(this.GameState.Controls.lastPosition);
-        if (clickedCell) clickedCell.rotateCell(1);
-      }
+    key: 'handleClick',
+    value: function handleClick(e) {
+      var clickedCell = this.getClickedCell(this.GameState.Controls.lastPosition);
+      if (clickedCell) clickedCell.rotateCell(1);
     }
   }, {
     key: 'getClickedCell',
@@ -1400,7 +1607,7 @@ var _class = function (_Level) {
 exports.default = _class;
 
 /***/ }),
-/* 17 */
+/* 21 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -1412,7 +1619,7 @@ Object.defineProperty(exports, "__esModule", {
 
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
-var _Entity2 = __webpack_require__(1);
+var _Entity2 = __webpack_require__(2);
 
 var _Entity3 = _interopRequireDefault(_Entity2);
 
@@ -1564,7 +1771,7 @@ var _class = function (_Entity) {
 exports.default = _class;
 
 /***/ }),
-/* 18 */
+/* 22 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -1576,19 +1783,19 @@ Object.defineProperty(exports, "__esModule", {
 
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
-var _AudioBuffer = __webpack_require__(19);
+var _AudioBuffer = __webpack_require__(23);
 
 var _AudioBuffer2 = _interopRequireDefault(_AudioBuffer);
 
-var _Background = __webpack_require__(20);
+var _Background = __webpack_require__(24);
 
 var _Background2 = _interopRequireDefault(_Background);
 
-var _Level2 = __webpack_require__(2);
+var _Level2 = __webpack_require__(1);
 
 var _Level3 = _interopRequireDefault(_Level2);
 
-var _NonLoopingSprite = __webpack_require__(21);
+var _NonLoopingSprite = __webpack_require__(25);
 
 var _NonLoopingSprite2 = _interopRequireDefault(_NonLoopingSprite);
 
@@ -1596,7 +1803,7 @@ var _randomRange = __webpack_require__(3);
 
 var _randomRange2 = _interopRequireDefault(_randomRange);
 
-var _RunningMan = __webpack_require__(22);
+var _RunningMan = __webpack_require__(26);
 
 var _RunningMan2 = _interopRequireDefault(_RunningMan);
 
@@ -1702,7 +1909,7 @@ var _class = function (_Level) {
 exports.default = _class;
 
 /***/ }),
-/* 19 */
+/* 23 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -1780,7 +1987,7 @@ var _class = function () {
 exports.default = _class;
 
 /***/ }),
-/* 20 */
+/* 24 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -1792,7 +1999,7 @@ Object.defineProperty(exports, "__esModule", {
 
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
-var _Entity2 = __webpack_require__(1);
+var _Entity2 = __webpack_require__(2);
 
 var _Entity3 = _interopRequireDefault(_Entity2);
 
@@ -1864,7 +2071,7 @@ var _class = function (_Entity) {
 exports.default = _class;
 
 /***/ }),
-/* 21 */
+/* 25 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -1874,7 +2081,7 @@ Object.defineProperty(exports, "__esModule", {
   value: true
 });
 
-var _Sprite2 = __webpack_require__(5);
+var _Sprite2 = __webpack_require__(6);
 
 var _Sprite3 = _interopRequireDefault(_Sprite2);
 
@@ -1916,7 +2123,7 @@ var _class = function (_Sprite) {
 exports.default = _class;
 
 /***/ }),
-/* 22 */
+/* 26 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -1928,7 +2135,7 @@ Object.defineProperty(exports, "__esModule", {
 
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
-var _Sprite2 = __webpack_require__(5);
+var _Sprite2 = __webpack_require__(6);
 
 var _Sprite3 = _interopRequireDefault(_Sprite2);
 
@@ -1936,7 +2143,7 @@ var _Vector = __webpack_require__(0);
 
 var _Vector2 = _interopRequireDefault(_Vector);
 
-var _keyCodes = __webpack_require__(23);
+var _keyCodes = __webpack_require__(27);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -2031,7 +2238,7 @@ var _class = function (_Sprite) {
 exports.default = _class;
 
 /***/ }),
-/* 23 */
+/* 27 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -2112,7 +2319,7 @@ var NUMPAD_8 = exports.NUMPAD_8 = 104;
 var NUMPAD_9 = exports.NUMPAD_9 = 105;
 
 /***/ }),
-/* 24 */
+/* 28 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -2172,7 +2379,7 @@ var _class = function () {
 exports.default = _class;
 
 /***/ }),
-/* 25 */
+/* 29 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -2186,7 +2393,7 @@ var _createClass = function () { function defineProperties(target, props) { for 
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
-var uuidv4 = __webpack_require__(26);
+var uuidv4 = __webpack_require__(5);
 
 var _class = function () {
   function _class(GameState) {
@@ -2227,110 +2434,7 @@ var _class = function () {
 exports.default = _class;
 
 /***/ }),
-/* 26 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-
-var rng = __webpack_require__(27);
-var bytesToUuid = __webpack_require__(28);
-
-function v4(options, buf, offset) {
-  var i = buf && offset || 0;
-
-  if (typeof options == 'string') {
-    buf = options === 'binary' ? new Array(16) : null;
-    options = null;
-  }
-  options = options || {};
-
-  var rnds = options.random || (options.rng || rng)();
-
-  // Per 4.4, set bits for version and `clock_seq_hi_and_reserved`
-  rnds[6] = rnds[6] & 0x0f | 0x40;
-  rnds[8] = rnds[8] & 0x3f | 0x80;
-
-  // Copy bytes to buffer, if provided
-  if (buf) {
-    for (var ii = 0; ii < 16; ++ii) {
-      buf[i + ii] = rnds[ii];
-    }
-  }
-
-  return buf || bytesToUuid(rnds);
-}
-
-module.exports = v4;
-
-/***/ }),
-/* 27 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-
-// Unique ID creation requires a high quality random # generator.  In the
-// browser this is a little complicated due to unknown quality of Math.random()
-// and inconsistent support for the `crypto` API.  We do the best we can via
-// feature-detection
-
-// getRandomValues needs to be invoked in a context where "this" is a Crypto
-// implementation. Also, find the complete implementation of crypto on IE11.
-var getRandomValues = typeof crypto != 'undefined' && crypto.getRandomValues && crypto.getRandomValues.bind(crypto) || typeof msCrypto != 'undefined' && typeof window.msCrypto.getRandomValues == 'function' && msCrypto.getRandomValues.bind(msCrypto);
-
-if (getRandomValues) {
-  // WHATWG crypto RNG - http://wiki.whatwg.org/wiki/Crypto
-  var rnds8 = new Uint8Array(16); // eslint-disable-line no-undef
-
-  module.exports = function whatwgRNG() {
-    getRandomValues(rnds8);
-    return rnds8;
-  };
-} else {
-  // Math.random()-based (RNG)
-  //
-  // If all else fails, use Math.random().  It's fast, but is of unspecified
-  // quality.
-  var rnds = new Array(16);
-
-  module.exports = function mathRNG() {
-    for (var i = 0, r; i < 16; i++) {
-      if ((i & 0x03) === 0) r = Math.random() * 0x100000000;
-      rnds[i] = r >>> ((i & 0x03) << 3) & 0xff;
-    }
-
-    return rnds;
-  };
-}
-
-/***/ }),
-/* 28 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-
-/**
- * Convert array of 16 byte values to UUID string format of the form:
- * XXXXXXXX-XXXX-XXXX-XXXX-XXXXXXXXXXXX
- */
-var byteToHex = [];
-for (var i = 0; i < 256; ++i) {
-  byteToHex[i] = (i + 0x100).toString(16).substr(1);
-}
-
-function bytesToUuid(buf, offset) {
-  var i = offset || 0;
-  var bth = byteToHex;
-  // join used to fix memory issue caused by concatenation: https://bugs.chromium.org/p/v8/issues/detail?id=3175#c4
-  return [bth[buf[i++]], bth[buf[i++]], bth[buf[i++]], bth[buf[i++]], '-', bth[buf[i++]], bth[buf[i++]], '-', bth[buf[i++]], bth[buf[i++]], '-', bth[buf[i++]], bth[buf[i++]], '-', bth[buf[i++]], bth[buf[i++]], bth[buf[i++]], bth[buf[i++]], bth[buf[i++]], bth[buf[i++]]].join('');
-}
-
-module.exports = bytesToUuid;
-
-/***/ }),
-/* 29 */
+/* 30 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -2521,7 +2625,7 @@ var _class = function () {
 exports.default = _class;
 
 /***/ }),
-/* 30 */
+/* 31 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";

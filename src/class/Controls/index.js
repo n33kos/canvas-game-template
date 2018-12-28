@@ -1,5 +1,8 @@
-import { throttle } from 'throttle-debounce';
-import Vector2      from 'class/Vector2';
+const uuidv4 = require('uuid/v4');
+
+import { throttle }   from 'throttle-debounce';
+import controlsConfig from 'config/controls';
+import Vector2        from 'class/Vector2';
 
 export default class {
   constructor(GameState) {
@@ -8,6 +11,29 @@ export default class {
     this.lastPosition = null;
     this.pressedKeys = [];
     this.debounceValue = 10;
+
+    // refer to `config/controls` for callback event names
+    this.callbacks = controlsConfig.callbacks;
+  }
+
+  addCallback(eventKey, callBack) {
+    const newUUID = uuidv4();
+    this.callbacks[eventKey].push({
+      uuid: newUUID,
+      callBack,
+    });
+
+    return newUUID;
+  }
+
+  clearCallbacks() {
+    this.callbacks = controlsConfig.callbacks;
+  }
+
+  removeCallback(eventKey, callBackUUID) {
+    this.callbacks[eventKey] = this.callbacks[eventKey].filter(
+      callback => callback.uuid !== callBackUUID,
+    );
   }
 
   init() {
@@ -30,43 +56,59 @@ export default class {
   handleTouchStart(e) {
     this.setLastPosition(e);
     this.isMouseDown = true;
+
+    this.callbacks['touchStart'].forEach(({ callBack }) => callBack(e));
   }
 
   handleTouchEnd(e) {
     this.setLastPosition(e);
     this.isMouseDown = false;
+
+    this.callbacks['touchEnd'].forEach(({ callBack }) => callBack(e));
   }
 
   handleTouchMove(e) {
     e.preventDefault();
     if (!this.isMouseDown || this.GameState.isPaused) return;
     this.setLastPosition(e);
+
+    this.callbacks['touchMove'].forEach(({ callBack }) => callBack(e));
   }
 
   // -----Mouse-----
   handleMouseDown(e) {
     this.setLastPosition(e);
     this.isMouseDown = true;
+
+    this.callbacks['mouseDown'].forEach(({ callBack }) => callBack(e));
   }
 
   handleMouseUp(e) {
     this.setLastPosition(e);
     this.isMouseDown = false;
+
+    this.callbacks['mouseUp'].forEach(({ callBack }) => callBack(e));
   }
 
   handleMouseMove(e) {
     if (!this.isMouseDown || this.GameState.isPaused) return;
     this.setLastPosition(e);
+
+    this.callbacks['mouseMove'].forEach(({ callBack }) => callBack(e));
   }
 
   // -----Keypresses------
   handleKeyDown(e) {
     if (!this.pressedKeys.includes(e.keyCode)) this.pressedKeys.push(e.keyCode);
+
+    this.callbacks['keyDown'].forEach(({ callBack }) => callBack(e));
   }
 
   handleKeyUp(e) {
     const index = this.pressedKeys.indexOf(e.keyCode);
     if (index > -1) this.pressedKeys.splice(index, 1);
+
+    this.callbacks['keyUp'].forEach(({ callBack }) => callBack(e));
   }
 
   setLastPosition(e) {

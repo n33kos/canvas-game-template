@@ -1,4 +1,5 @@
 import * as defaultConfig from 'config/gameState';
+import Level              from 'class/Level';
 import levels             from 'config/levels';
 
 export default class {
@@ -10,6 +11,7 @@ export default class {
     this.levels = [];
     this.score = 0;
     this.playerName = defaultConfig.playerName;
+    this.currentLevel = new Level({ GameState: this });
 
     /*
       Class variables added in loader :
@@ -36,8 +38,14 @@ export default class {
   }
 
   loadLevel() {
-    const level = this.levels[this.level];
-    level.load();
+    const newLevel = this.levels[this.level];
+
+    // unload level if one was already loaded
+    if (this.currentLevel) this.currentLevel.unLoad();
+
+    // load level
+    newLevel.load();
+    this.currentLevel = newLevel;
 
     // Remove focus from any UI elements clicked to prevent control misdirection
     document.activeElement.blur();
@@ -53,7 +61,7 @@ export default class {
     if (response == true) {
       this.endGame();
       this.UI.setScreen('level');
-      this.levels[this.level].audioNodes.forEach(audioNode => {
+      this.currentLevel.audioNodes.forEach(audioNode => {
         audioNode.stop(0);
       });
     }
