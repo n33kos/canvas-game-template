@@ -26,7 +26,7 @@ export default class extends Level {
   addBGMusic() {
     const audioNode = new AudioBuffer({
       GameState    : this.GameState,
-      audioFileUrl : './audio/bg.mp3',
+      audioFileUrl : './audio/examples/bg.mp3',
       shouldLoop   : true,
     });
     audioNode.load(() => {});
@@ -63,7 +63,7 @@ export default class extends Level {
       offset: new Vector2(0, 0),
       dimensions: new Vector2(this.GameState.Canvas.width, 32),
       position: new Vector2(-this.GameState.Canvas.cx, -this.GameState.Canvas.cy + 320),
-      imageUrl: './img/ground.png',
+      imageUrl: './img/examples/ground.png',
       repeat: 'repeat-x',
       scale: new Vector2(10, 10),
     });

@@ -15,19 +15,19 @@ export default class extends Sprite {
       idle : {
         frames        : 12,
         loop          : true,
-        spriteSheet   : './img/idle.png',
+        spriteSheet   : './img/examples/idle.png',
         ticksPerFrame : 4,
       },
       run : {
         frames        : 8,
         loop          : true,
-        spriteSheet   : './img/run.png',
+        spriteSheet   : './img/examples/run.png',
         ticksPerFrame : 4,
       },
       jump : {
         frames        : 4,
         loop          : true,
-        spriteSheet   : './img/jump.png',
+        spriteSheet   : './img/examples/jump.png',
         ticksPerFrame : 12,
       },
     };

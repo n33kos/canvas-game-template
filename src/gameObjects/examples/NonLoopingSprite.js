@@ -9,7 +9,7 @@ export default class extends Sprite {
       count : {
         frames        : 5,
         loop          : false,
-        spriteSheet   : './img/numbers.png',
+        spriteSheet   : './img/examples/numbers.png',
         ticksPerFrame : 20,
       },
     };

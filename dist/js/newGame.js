@@ -1847,7 +1847,7 @@ var _class = function (_Level) {
     value: function addBGMusic() {
       var audioNode = new _AudioBuffer2.default({
         GameState: this.GameState,
-        audioFileUrl: './audio/bg.mp3',
+        audioFileUrl: './audio/examples/bg.mp3',
         shouldLoop: true
       });
       audioNode.load(function () {});
@@ -1889,7 +1889,7 @@ var _class = function (_Level) {
         offset: new _Vector2.default(0, 0),
         dimensions: new _Vector2.default(this.GameState.Canvas.width, 32),
         position: new _Vector2.default(-this.GameState.Canvas.cx, -this.GameState.Canvas.cy + 320),
-        imageUrl: './img/ground.png',
+        imageUrl: './img/examples/ground.png',
         repeat: 'repeat-x',
         scale: new _Vector2.default(10, 10)
       });
@@ -2109,7 +2109,7 @@ var _class = function (_Sprite) {
       count: {
         frames: 5,
         loop: false,
-        spriteSheet: './img/numbers.png',
+        spriteSheet: './img/examples/numbers.png',
         ticksPerFrame: 20
       }
     };
@@ -2166,19 +2166,19 @@ var _class = function (_Sprite) {
       idle: {
         frames: 12,
         loop: true,
-        spriteSheet: './img/idle.png',
+        spriteSheet: './img/examples/idle.png',
         ticksPerFrame: 4
       },
       run: {
         frames: 8,
         loop: true,
-        spriteSheet: './img/run.png',
+        spriteSheet: './img/examples/run.png',
         ticksPerFrame: 4
       },
       jump: {
         frames: 4,
         loop: true,
-        spriteSheet: './img/jump.png',
+        spriteSheet: './img/examples/jump.png',
         ticksPerFrame: 12
       }
     };
