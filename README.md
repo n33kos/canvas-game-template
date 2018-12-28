@@ -58,18 +58,20 @@ Here is a list of the callback event keys:
 - `keyUp`
 
 ### Audio
-Upon game load, a master audio node is set up and stored under `GameState.Audio.masterAudioNode`. To add sounds or background music, create an `audioBuffer` class in the level's `load()` function, then add it to the audioNodes list. You will need to run the audioBuffer's `load()` function then once loaded, call the `play()` function to start the audio.
-
+Upon game load, a master audio node is set up and stored under `GameState.Audio.masterAudioNode`. To add sounds or background music, create an `audioBuffer` class in the level's `load()` function, then add it to the audioNodes list. You will need to run the audioBuffer's `load()` function then once loaded, call the `play()` function to start the audio, or you could include `autoPlay: true` in the config.
 ```
 const audioNode = new AudioBuffer({
-  GameState    : this.GameState,
   audioFileUrl : './audio/bg.mp3',
+  autoPlay     : true,
+  GameState    : this.GameState,
   shouldLoop   : true,
 });
 audioNode.load(() => {});
 window.setTimeout(() => { audioNode.play(); }, 100);
 this.audioNodes.push(audioNode);
 ```
+If you are controlling sounds via the `Level` class, you can use the `this.addAudioNode(audioNode)` function to add the sound to an array as well as load it. This also means the sounds will be stopped automatically when the level is unloaded.
+
 
 ### Sprite
 The sprite entity extends the `Entity` class but adds functionality to draw a sprite from an image with animation frames. It expects a horizontal sprite strip. It also has `scale`, `mirrorX`, and `mirrorY` variables for scaling and mirroring the sprite. To set an animation simply set the sprite's `currentAnimation` string to the animation's key. Make sure to use the `load()` function after initializing. Here is an example of the animations array:
