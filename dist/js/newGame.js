@@ -1316,7 +1316,7 @@ var _class = function () {
     key: 'quit',
     value: function quit() {
       this.endlevel();
-      this.UI.setScreen('level');
+      this.UI.setScreen('mainmenu');
     }
   }, {
     key: 'togglePause',
@@ -1334,6 +1334,7 @@ var _class = function () {
     key: 'endlevel',
     value: function endlevel() {
       this.currentLevel.unload();
+      this.isPaused = true;
       this.score = _gameState2.default.score;
     }
   }]);

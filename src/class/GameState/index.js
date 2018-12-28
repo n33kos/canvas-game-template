@@ -57,7 +57,7 @@ export default class {
 
   quit() {
     this.endlevel();
-    this.UI.setScreen('level');
+    this.UI.setScreen('mainmenu');
   }
 
   togglePause() {
@@ -73,6 +73,7 @@ export default class {
 
   endlevel() {
     this.currentLevel.unload();
+    this.isPaused = true;
     this.score = config.score;
   }
 }

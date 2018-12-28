@@ -70,7 +70,7 @@ audioNode.load(() => {});
 window.setTimeout(() => { audioNode.play(); }, 100);
 this.audioNodes.push(audioNode);
 ```
-If you are controlling sounds via the `Level` class, you can use the `this.addAudioNode(audioNode)` function to add the sound to an array as well as load it. This also means the sounds will be stopped automatically when the level is unloaded.
+If you are controlling sounds via a class which extends `LoadedEntity` (`Level` or `Entity`), you can use the `addAudioNode(audioNode)` function to load the sound and keep track of it for unloading. This also means the sounds will be stopped automatically when the level is unloaded.
 
 
 ### Sprite
