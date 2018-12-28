@@ -15,7 +15,6 @@ export default class extends Level {
 
   load() {
     this.GameState.Scene.clear();
-    this.audioNodes = [];
 
     this.addBGMusic();
     this.addGround();
@@ -25,13 +24,12 @@ export default class extends Level {
 
   addBGMusic() {
     const audioNode = new AudioBuffer({
-      GameState    : this.GameState,
       audioFileUrl : './audio/examples/bg.mp3',
+      autoPlay     : true,
+      GameState    : this.GameState,
       shouldLoop   : true,
     });
-    audioNode.load(() => {});
-    window.setTimeout(() => { audioNode.play(); }, 100);
-    this.audioNodes.push(audioNode);
+    this.addAudioNode(audioNode);
   }
 
   addCharacter() {
@@ -43,7 +41,6 @@ export default class extends Level {
       initialheight: -this.GameState.Canvas.cy + 285,
     });
     runner.setPosition(new Vector2(0, -this.GameState.Canvas.cy + 320));
-    runner.load();
     this.GameState.Scene.add(runner);
   }
 
@@ -53,7 +50,6 @@ export default class extends Level {
       dimensions: new Vector2(32, 32),
       scale: new Vector2(10, 10),
     });
-    nonlooper.load();
     this.GameState.Scene.add(nonlooper);
   }
 
@@ -67,11 +63,6 @@ export default class extends Level {
       repeat: 'repeat-x',
       scale: new Vector2(10, 10),
     });
-    ground.load();
     this.GameState.Scene.add(ground);
-  }
-
-  gameLogic() {
-    // Override this function to add level specific game logic
   }
 }

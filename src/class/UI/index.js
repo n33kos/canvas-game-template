@@ -32,12 +32,12 @@ export default class {
 
     // Play buttons
     Array.from(this.buttons.play).forEach(button => {
-      button.addEventListener('click', () => this.GameState.play());
+      button.addEventListener('click', () => this.GameState.play() );
     });
 
     // Pause buttons
     Array.from(this.buttons.pause).forEach(button => {
-      button.addEventListener('click', () => this.GameState.togglePause());
+      button.addEventListener('click', () => this.GameState.togglePause() );
     });
 
     // Restart Buttons
@@ -63,7 +63,7 @@ export default class {
 
     // Quit buttons
     Array.from(this.buttons.quit).forEach(button => {
-      button.addEventListener('click', () => window.close() );
+      button.addEventListener('click', () => this.GameState.quit() );
     });
 
     // Mute Buttons

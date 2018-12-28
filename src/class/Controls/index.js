@@ -1,8 +1,7 @@
-const uuidv4 = require('uuid/v4');
-
-import { throttle }   from 'throttle-debounce';
-import controlsConfig from 'config/controls';
-import Vector2        from 'class/Vector2';
+import { throttle } from 'throttle-debounce';
+import config       from 'config/controls';
+import uuidv4       from 'uuid/v4';
+import Vector2      from 'class/Vector2';
 
 export default class {
   constructor(GameState) {
@@ -13,7 +12,7 @@ export default class {
     this.debounceValue = 10;
 
     // refer to `config/controls` for callback event names
-    this.callbacks = controlsConfig.callbacks;
+    this.callbacks = config.callbacks;
   }
 
   addCallback(eventKey, callBack) {
@@ -27,13 +26,15 @@ export default class {
   }
 
   clearCallbacks() {
-    this.callbacks = controlsConfig.callbacks;
+    this.callbacks = config.callbacks;
   }
 
-  removeCallback(eventKey, callBackUUID) {
-    this.callbacks[eventKey] = this.callbacks[eventKey].filter(
-      callback => callback.uuid !== callBackUUID,
-    );
+  removeCallback(callBackUUID) {
+    Object.keys(this.callbacks).forEach(eventKey => {
+      this.callbacks[eventKey] = this.callbacks[eventKey].filter(
+        callback => callback.uuid !== callBackUUID,
+      );
+    });
   }
 
   init() {

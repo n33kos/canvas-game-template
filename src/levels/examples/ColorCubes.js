@@ -28,8 +28,4 @@ export default class extends Level {
       this.GameState.Scene.add(cube);
     }
   }
-
-  gameLogic() {
-    // Override this function to add level specific game logic
-  }
 }

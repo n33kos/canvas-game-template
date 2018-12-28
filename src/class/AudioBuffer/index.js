@@ -1,10 +1,12 @@
 export default class {
   constructor({
     audioFileUrl,
+    autoPlay,
     GameState,
     shouldLoop,
   }) {
     this.audioFileUrl = audioFileUrl;
+    this.autoPlay = autoPlay;
     this.GameState = GameState;
     this.shouldLoop = shouldLoop;
 
@@ -12,23 +14,21 @@ export default class {
     this.buffer = null;
   }
 
-  load(callback) {
+  load(callback = null) {
     const req = new XMLHttpRequest();
     req.responseType = "arraybuffer";
     req.onload = () => {
-      this.createBufferFromData(req.response);
-      callback();
-    }
-    req.onerror = () => {
-      callback();
+      this.createBufferFromData(req.response, callback);
     }
     req.open('GET', this.audioFileUrl, true);
     req.send();
   }
 
-  createBufferFromData(data) {
+  createBufferFromData(data, callback) {
     this.GameState.Audio.audioContext.decodeAudioData(data, (buffer) => {
       this.buffer = buffer;
+      if (this.autoPlay) this.play();
+      if (callback) callback();
     });
   }
 

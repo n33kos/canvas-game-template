@@ -1,25 +1,29 @@
-const uuidv4 = require('uuid/v4');
+import uuidv4 from 'uuid/v4';
 
 export default class {
   constructor(GameState) {
     this.GameState = GameState;
-    this.entities = [];
+    this.gameObjects = [];
   }
 
   init() {
     // Nothing here yet
   }
 
-  add(entity) {
-    entity.uuid = uuidv4();
-    this.entities.push(entity);
+  add(gameObject) {
+    gameObject.uuid = uuidv4();
+    gameObject.load();
+    this.gameObjects.push(gameObject);
   }
 
   remove(uuid) {
-    this.entities = this.entities.filter(el => el.uuid !== uuid);
+    const gameObject = this.gameObjects.find(el => el.uuid === uuid);
+    gameObject.unload();
+
+    this.gameObjects = this.gameObjects.filter(el => el.uuid !== uuid);
   }
 
   clear() {
-    this.entities = [];
+    this.gameObjects = [];
   }
 }

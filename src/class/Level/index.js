@@ -1,18 +1,10 @@
-export default class {
-  constructor() {
+import LoadedEntity from 'class/LoadedEntity';
+
+export default class extends LoadedEntity {
+  constructor(config) {
+    super(config);
+
     this.name = 'Default Level';
-    this.audioNodes = [];
-    this.controlCallbackIds = [];
-  }
-
-  init(GameState) {
-    this.GameState = GameState;
-  }
-
-  load() {
-  }
-
-  unLoad() {
   }
 
   gameLogic() {

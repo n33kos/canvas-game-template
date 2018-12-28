@@ -2,26 +2,31 @@
   Override this class to create game entities.
   Draw canvas calls at position 0,0 as position, rotation, and offset will be applied automagically
 */
+import LoadedEntity       from 'class/LoadedEntity';
 import Vector2            from 'class/Vector2';
 import worldSpaceToCanvas from 'lib/worldSpaceToCanvas';
 
-export default class {
-  constructor({
-    dimensions = new Vector2(100, 100),
-    GameState = null,
-    offset = new Vector2(0.5, 0.5),
-    position = new Vector2(),
-    rotation = 0,
-  }) {
+export default class extends LoadedEntity {
+  constructor(config) {
+    super(config);
+
+    const {
+      dimensions = new Vector2(100, 100),
+      offset = new Vector2(0.5, 0.5),
+      position = new Vector2(),
+      rotation = 0,
+    } = config;
+
+    this.absoluteOffset = new Vector2();
+    this.audioNodes = [];
+    this.canvasPosition = new Vector2();
+    this.controlCallbackIds = [];
     this.dimensions = dimensions;
     this.GameState = GameState;
     this.offset = offset;
     this.position = position;
     this.rotation = rotation;
 
-    // These vars will be calculated via setPosition
-    this.canvasPosition = new Vector2();
-    this.absoluteOffset = new Vector2();
     this.setPosition(position);
   }
 
