@@ -26,6 +26,7 @@ export default class extends Level {
       (this.GameState.Canvas.width - this.cellSize * this.rows) / 2,
       (this.GameState.Canvas.height - this.cellSize * this.columns) / 2,
     );
+    this.hoveredCell = null;
 
     for (let y = 0; y < this.columns; y++) {
       for (let x = 0; x < this.rows; x++) {
@@ -55,14 +56,27 @@ export default class extends Level {
 
 
     this.addControlsCallback('mouseUp', this.handleClick.bind(this));
+    this.addControlsCallback('mouseMove', this.handleMouseMove.bind(this));
   }
 
   handleClick(e) {
-    const clickedCell = this.getClickedCell(this.GameState.Controls.lastPosition);
+    const clickedCell = this.getCellAtCanvasPosition(this.GameState.Controls.lastPosition);
     if (clickedCell) clickedCell.rotateCell(1);
   }
 
-  getClickedCell(position) {
+  handleMouseMove(e) {
+    this.hoveredCell = this.getCellAtCanvasPosition(this.GameState.Controls.position);
+    if (!this.hoveredCell) return;
+
+    this.grid.forEach(cell => {
+      cell.fillStyle = 'white';
+      if (this.hoveredCell.id === cell.id) {
+        cell.fillStyle = 'pink';
+      }
+    })
+  }
+
+  getCellAtCanvasPosition(position) {
     const x = Math.floor((position.x - this.padding.x) / this.cellSize);
     const y = Math.floor((position.y - this.padding.y) / this.cellSize);
     return this.grid.find(cell => cell.id === `${x}_${y}`);

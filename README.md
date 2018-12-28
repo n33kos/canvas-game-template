@@ -45,7 +45,7 @@ Levels live in `src/levels`. Each level extends the `Level` entity which is most
 ### Controls
 Upon load, the `Controls` class will add event listeners to key, mouse, and touch events. It supports the addition of custom callbacks for each event via the `addCallback(eventKey, callback)` function. If you need to remove a callback keep track of the UUID returned by `addCallback` then call `removeCallback(eventKey, callBackUUID)`.
 
-It also keeps an array of pressed Keys `this.pressedKeys` and stores the last position of the mouse `this.lastPosition`. This can be helpful for certain interaction methods.
+It also keeps an array of pressed Keys `this.pressedKeys`, position `this.position`, and lastPosition `this.lastPosition`.the position variables handles both touch and mouse inputs so its better to check on them than on the callback event.
 
 Here is a list of the callback event keys:
 - `mouseDown`

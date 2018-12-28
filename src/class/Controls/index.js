@@ -8,6 +8,7 @@ export default class {
     this.GameState = GameState;
     this.isMouseDown = false;
     this.lastPosition = null;
+    this.position = null;
     this.pressedKeys = [];
     this.debounceValue = 10;
 
@@ -55,14 +56,14 @@ export default class {
 
   // -----Touch-----
   handleTouchStart(e) {
-    this.setLastPosition(e);
+    this.lastPosition = this.position;
     this.isMouseDown = true;
 
     this.callbacks['touchStart'].forEach(({ callBack }) => callBack(e));
   }
 
   handleTouchEnd(e) {
-    this.setLastPosition(e);
+    this.lastPosition = this.position;
     this.isMouseDown = false;
 
     this.callbacks['touchEnd'].forEach(({ callBack }) => callBack(e));
@@ -70,31 +71,27 @@ export default class {
 
   handleTouchMove(e) {
     e.preventDefault();
-    if (!this.isMouseDown || this.GameState.isPaused) return;
-    this.setLastPosition(e);
-
+    this.setPosition(e);
     this.callbacks['touchMove'].forEach(({ callBack }) => callBack(e));
   }
 
   // -----Mouse-----
   handleMouseDown(e) {
-    this.setLastPosition(e);
+    this.lastPosition = this.position;
     this.isMouseDown = true;
 
     this.callbacks['mouseDown'].forEach(({ callBack }) => callBack(e));
   }
 
   handleMouseUp(e) {
-    this.setLastPosition(e);
+    this.lastPosition = this.position;
     this.isMouseDown = false;
 
     this.callbacks['mouseUp'].forEach(({ callBack }) => callBack(e));
   }
 
   handleMouseMove(e) {
-    if (!this.isMouseDown || this.GameState.isPaused) return;
-    this.setLastPosition(e);
-
+    this.setPosition(e);
     this.callbacks['mouseMove'].forEach(({ callBack }) => callBack(e));
   }
 
@@ -112,16 +109,16 @@ export default class {
     this.callbacks['keyUp'].forEach(({ callBack }) => callBack(e));
   }
 
-  setLastPosition(e) {
+  setPosition(e) {
     if ('clientX' in e) {
-      this.lastPosition = new Vector2(
+      this.position = new Vector2(
         e.clientX * this.GameState.Canvas.scale,
         e.clientY * this.GameState.Canvas.scale,
       );
     }
 
     if ('targetTouches' in e) {
-      this.lastPosition = new Vector2(
+      this.position = new Vector2(
         e.targetTouches[0].clientX * this.GameState.Canvas.scale,
         e.targetTouches[0].clientY * this.GameState.Canvas.scale,
       );

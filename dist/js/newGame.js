@@ -952,6 +952,7 @@ var _class = function () {
     this.GameState = GameState;
     this.isMouseDown = false;
     this.lastPosition = null;
+    this.position = null;
     this.pressedKeys = [];
     this.debounceValue = 10;
 
@@ -1023,7 +1024,7 @@ var _class = function () {
   }, {
     key: 'handleTouchStart',
     value: function handleTouchStart(e) {
-      this.setLastPosition(e);
+      this.lastPosition = this.position;
       this.isMouseDown = true;
 
       this.callbacks['touchStart'].forEach(function (_ref) {
@@ -1034,7 +1035,7 @@ var _class = function () {
   }, {
     key: 'handleTouchEnd',
     value: function handleTouchEnd(e) {
-      this.setLastPosition(e);
+      this.lastPosition = this.position;
       this.isMouseDown = false;
 
       this.callbacks['touchEnd'].forEach(function (_ref2) {
@@ -1046,9 +1047,7 @@ var _class = function () {
     key: 'handleTouchMove',
     value: function handleTouchMove(e) {
       e.preventDefault();
-      if (!this.isMouseDown || this.GameState.isPaused) return;
-      this.setLastPosition(e);
-
+      this.setPosition(e);
       this.callbacks['touchMove'].forEach(function (_ref3) {
         var callBack = _ref3.callBack;
         return callBack(e);
@@ -1060,7 +1059,7 @@ var _class = function () {
   }, {
     key: 'handleMouseDown',
     value: function handleMouseDown(e) {
-      this.setLastPosition(e);
+      this.lastPosition = this.position;
       this.isMouseDown = true;
 
       this.callbacks['mouseDown'].forEach(function (_ref4) {
@@ -1071,7 +1070,7 @@ var _class = function () {
   }, {
     key: 'handleMouseUp',
     value: function handleMouseUp(e) {
-      this.setLastPosition(e);
+      this.lastPosition = this.position;
       this.isMouseDown = false;
 
       this.callbacks['mouseUp'].forEach(function (_ref5) {
@@ -1082,9 +1081,7 @@ var _class = function () {
   }, {
     key: 'handleMouseMove',
     value: function handleMouseMove(e) {
-      if (!this.isMouseDown || this.GameState.isPaused) return;
-      this.setLastPosition(e);
-
+      this.setPosition(e);
       this.callbacks['mouseMove'].forEach(function (_ref6) {
         var callBack = _ref6.callBack;
         return callBack(e);
@@ -1115,14 +1112,14 @@ var _class = function () {
       });
     }
   }, {
-    key: 'setLastPosition',
-    value: function setLastPosition(e) {
+    key: 'setPosition',
+    value: function setPosition(e) {
       if ('clientX' in e) {
-        this.lastPosition = new _Vector2.default(e.clientX * this.GameState.Canvas.scale, e.clientY * this.GameState.Canvas.scale);
+        this.position = new _Vector2.default(e.clientX * this.GameState.Canvas.scale, e.clientY * this.GameState.Canvas.scale);
       }
 
       if ('targetTouches' in e) {
-        this.lastPosition = new _Vector2.default(e.targetTouches[0].clientX * this.GameState.Canvas.scale, e.targetTouches[0].clientY * this.GameState.Canvas.scale);
+        this.position = new _Vector2.default(e.targetTouches[0].clientX * this.GameState.Canvas.scale, e.targetTouches[0].clientY * this.GameState.Canvas.scale);
       }
     }
   }]);
@@ -1625,6 +1622,7 @@ var _class = function (_Level) {
       this.minimumPadding = 200;
       this.cellSize = (this.minDimension - this.minimumPadding) / this.rows;
       this.padding = new _Vector2.default((this.GameState.Canvas.width - this.cellSize * this.rows) / 2, (this.GameState.Canvas.height - this.cellSize * this.columns) / 2);
+      this.hoveredCell = null;
 
       for (var y = 0; y < this.columns; y++) {
         for (var x = 0; x < this.rows; x++) {
@@ -1650,16 +1648,32 @@ var _class = function (_Level) {
       });
 
       this.addControlsCallback('mouseUp', this.handleClick.bind(this));
+      this.addControlsCallback('mouseMove', this.handleMouseMove.bind(this));
     }
   }, {
     key: 'handleClick',
     value: function handleClick(e) {
-      var clickedCell = this.getClickedCell(this.GameState.Controls.lastPosition);
+      var clickedCell = this.getCellAtCanvasPosition(this.GameState.Controls.lastPosition);
       if (clickedCell) clickedCell.rotateCell(1);
     }
   }, {
-    key: 'getClickedCell',
-    value: function getClickedCell(position) {
+    key: 'handleMouseMove',
+    value: function handleMouseMove(e) {
+      var _this3 = this;
+
+      this.hoveredCell = this.getCellAtCanvasPosition(this.GameState.Controls.position);
+      if (!this.hoveredCell) return;
+
+      this.grid.forEach(function (cell) {
+        cell.fillStyle = 'white';
+        if (_this3.hoveredCell.id === cell.id) {
+          cell.fillStyle = 'pink';
+        }
+      });
+    }
+  }, {
+    key: 'getCellAtCanvasPosition',
+    value: function getCellAtCanvasPosition(position) {
       var x = Math.floor((position.x - this.padding.x) / this.cellSize);
       var y = Math.floor((position.y - this.padding.y) / this.cellSize);
       return this.grid.find(function (cell) {
