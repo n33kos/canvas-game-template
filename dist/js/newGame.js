@@ -145,7 +145,7 @@ Object.defineProperty(exports, "__esModule", {
 
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
-var _LoadedEntity2 = __webpack_require__(6);
+var _LoadedEntity2 = __webpack_require__(7);
 
 var _LoadedEntity3 = _interopRequireDefault(_LoadedEntity2);
 
@@ -194,7 +194,7 @@ Object.defineProperty(exports, "__esModule", {
 
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
-var _LoadedEntity2 = __webpack_require__(6);
+var _LoadedEntity2 = __webpack_require__(7);
 
 var _LoadedEntity3 = _interopRequireDefault(_LoadedEntity2);
 
@@ -312,239 +312,6 @@ exports.default = function (min, max) {
 
 /***/ }),
 /* 4 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-
-Object.defineProperty(exports, "__esModule", {
-	value: true
-});
-/* eslint-disable no-undefined,no-param-reassign,no-shadow */
-
-/**
- * Throttle execution of a function. Especially useful for rate limiting
- * execution of handlers on events like resize and scroll.
- *
- * @param  {Number}    delay          A zero-or-greater delay in milliseconds. For event callbacks, values around 100 or 250 (or even higher) are most useful.
- * @param  {Boolean}   [noTrailing]   Optional, defaults to false. If noTrailing is true, callback will only execute every `delay` milliseconds while the
- *                                    throttled-function is being called. If noTrailing is false or unspecified, callback will be executed one final time
- *                                    after the last throttled-function call. (After the throttled-function has not been called for `delay` milliseconds,
- *                                    the internal counter is reset)
- * @param  {Function}  callback       A function to be executed after delay milliseconds. The `this` context and all arguments are passed through, as-is,
- *                                    to `callback` when the throttled-function is executed.
- * @param  {Boolean}   [debounceMode] If `debounceMode` is true (at begin), schedule `clear` to execute after `delay` ms. If `debounceMode` is false (at end),
- *                                    schedule `callback` to execute after `delay` ms.
- *
- * @return {Function}  A new, throttled, function.
- */
-function throttle(delay, noTrailing, callback, debounceMode) {
-
-	/*
-  * After wrapper has stopped being called, this timeout ensures that
-  * `callback` is executed at the proper times in `throttle` and `end`
-  * debounce modes.
-  */
-	var timeoutID;
-
-	// Keep track of the last time `callback` was executed.
-	var lastExec = 0;
-
-	// `noTrailing` defaults to falsy.
-	if (typeof noTrailing !== 'boolean') {
-		debounceMode = callback;
-		callback = noTrailing;
-		noTrailing = undefined;
-	}
-
-	/*
-  * The `wrapper` function encapsulates all of the throttling / debouncing
-  * functionality and when executed will limit the rate at which `callback`
-  * is executed.
-  */
-	function wrapper() {
-
-		var self = this;
-		var elapsed = Number(new Date()) - lastExec;
-		var args = arguments;
-
-		// Execute `callback` and update the `lastExec` timestamp.
-		function exec() {
-			lastExec = Number(new Date());
-			callback.apply(self, args);
-		}
-
-		/*
-   * If `debounceMode` is true (at begin) this is used to clear the flag
-   * to allow future `callback` executions.
-   */
-		function clear() {
-			timeoutID = undefined;
-		}
-
-		if (debounceMode && !timeoutID) {
-			/*
-    * Since `wrapper` is being called for the first time and
-    * `debounceMode` is true (at begin), execute `callback`.
-    */
-			exec();
-		}
-
-		// Clear any existing timeout.
-		if (timeoutID) {
-			clearTimeout(timeoutID);
-		}
-
-		if (debounceMode === undefined && elapsed > delay) {
-			/*
-    * In throttle mode, if `delay` time has been exceeded, execute
-    * `callback`.
-    */
-			exec();
-		} else if (noTrailing !== true) {
-			/*
-    * In trailing throttle mode, since `delay` time has not been
-    * exceeded, schedule `callback` to execute `delay` ms after most
-    * recent execution.
-    *
-    * If `debounceMode` is true (at begin), schedule `clear` to execute
-    * after `delay` ms.
-    *
-    * If `debounceMode` is false (at end), schedule `callback` to
-    * execute after `delay` ms.
-    */
-			timeoutID = setTimeout(debounceMode ? clear : exec, debounceMode === undefined ? delay - elapsed : delay);
-		}
-	}
-
-	// Return the wrapper function.
-	return wrapper;
-}
-
-/* eslint-disable no-undefined */
-
-/**
- * Debounce execution of a function. Debouncing, unlike throttling,
- * guarantees that a function is only executed a single time, either at the
- * very beginning of a series of calls, or at the very end.
- *
- * @param  {Number}   delay         A zero-or-greater delay in milliseconds. For event callbacks, values around 100 or 250 (or even higher) are most useful.
- * @param  {Boolean}  [atBegin]     Optional, defaults to false. If atBegin is false or unspecified, callback will only be executed `delay` milliseconds
- *                                  after the last debounced-function call. If atBegin is true, callback will be executed only at the first debounced-function call.
- *                                  (After the throttled-function has not been called for `delay` milliseconds, the internal counter is reset).
- * @param  {Function} callback      A function to be executed after delay milliseconds. The `this` context and all arguments are passed through, as-is,
- *                                  to `callback` when the debounced-function is executed.
- *
- * @return {Function} A new, debounced function.
- */
-function debounce(delay, atBegin, callback) {
-	return callback === undefined ? throttle(delay, atBegin, false) : throttle(delay, callback, atBegin !== false);
-}
-
-exports.throttle = throttle;
-exports.debounce = debounce;
-
-/***/ }),
-/* 5 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-
-var rng = __webpack_require__(13);
-var bytesToUuid = __webpack_require__(14);
-
-function v4(options, buf, offset) {
-  var i = buf && offset || 0;
-
-  if (typeof options == 'string') {
-    buf = options === 'binary' ? new Array(16) : null;
-    options = null;
-  }
-  options = options || {};
-
-  var rnds = options.random || (options.rng || rng)();
-
-  // Per 4.4, set bits for version and `clock_seq_hi_and_reserved`
-  rnds[6] = rnds[6] & 0x0f | 0x40;
-  rnds[8] = rnds[8] & 0x3f | 0x80;
-
-  // Copy bytes to buffer, if provided
-  if (buf) {
-    for (var ii = 0; ii < 16; ++ii) {
-      buf[i + ii] = rnds[ii];
-    }
-  }
-
-  return buf || bytesToUuid(rnds);
-}
-
-module.exports = v4;
-
-/***/ }),
-/* 6 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-
-Object.defineProperty(exports, "__esModule", {
-  value: true
-});
-
-var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
-
-function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
-
-var _class = function () {
-  function _class(GameState) {
-    _classCallCheck(this, _class);
-
-    this.GameState = GameState;
-    this.audioNodes = [];
-    this.controlCallbackIds = [];
-  }
-
-  _createClass(_class, [{
-    key: "load",
-    value: function load() {}
-  }, {
-    key: "unload",
-    value: function unload() {
-      var _this = this;
-
-      // Stop audio nodes
-      this.audioNodes.forEach(function (audioNode) {
-        audioNode.stop(0);
-      });
-      this.audioNodes = [];
-
-      // Remove control callbacks
-      this.controlCallbackIds.forEach(function (callbackId) {
-        _this.GameState.Controls.removeCallback(callbackId);
-      });
-      this.controlCallbackIds = [];
-    }
-  }, {
-    key: "addControlsCallback",
-    value: function addControlsCallback(eventKey, callback) {
-      this.controlCallbackIds.push(this.GameState.Controls.addCallback(eventKey, callback));
-    }
-  }, {
-    key: "addAudioNode",
-    value: function addAudioNode(audioNode) {
-      this.audioNodes.push(audioNode);
-      audioNode.load();
-    }
-  }]);
-
-  return _class;
-}();
-
-exports.default = _class;
-
-/***/ }),
-/* 7 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -696,6 +463,239 @@ var _class = function (_Entity) {
 exports.default = _class;
 
 /***/ }),
+/* 5 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+	value: true
+});
+/* eslint-disable no-undefined,no-param-reassign,no-shadow */
+
+/**
+ * Throttle execution of a function. Especially useful for rate limiting
+ * execution of handlers on events like resize and scroll.
+ *
+ * @param  {Number}    delay          A zero-or-greater delay in milliseconds. For event callbacks, values around 100 or 250 (or even higher) are most useful.
+ * @param  {Boolean}   [noTrailing]   Optional, defaults to false. If noTrailing is true, callback will only execute every `delay` milliseconds while the
+ *                                    throttled-function is being called. If noTrailing is false or unspecified, callback will be executed one final time
+ *                                    after the last throttled-function call. (After the throttled-function has not been called for `delay` milliseconds,
+ *                                    the internal counter is reset)
+ * @param  {Function}  callback       A function to be executed after delay milliseconds. The `this` context and all arguments are passed through, as-is,
+ *                                    to `callback` when the throttled-function is executed.
+ * @param  {Boolean}   [debounceMode] If `debounceMode` is true (at begin), schedule `clear` to execute after `delay` ms. If `debounceMode` is false (at end),
+ *                                    schedule `callback` to execute after `delay` ms.
+ *
+ * @return {Function}  A new, throttled, function.
+ */
+function throttle(delay, noTrailing, callback, debounceMode) {
+
+	/*
+  * After wrapper has stopped being called, this timeout ensures that
+  * `callback` is executed at the proper times in `throttle` and `end`
+  * debounce modes.
+  */
+	var timeoutID;
+
+	// Keep track of the last time `callback` was executed.
+	var lastExec = 0;
+
+	// `noTrailing` defaults to falsy.
+	if (typeof noTrailing !== 'boolean') {
+		debounceMode = callback;
+		callback = noTrailing;
+		noTrailing = undefined;
+	}
+
+	/*
+  * The `wrapper` function encapsulates all of the throttling / debouncing
+  * functionality and when executed will limit the rate at which `callback`
+  * is executed.
+  */
+	function wrapper() {
+
+		var self = this;
+		var elapsed = Number(new Date()) - lastExec;
+		var args = arguments;
+
+		// Execute `callback` and update the `lastExec` timestamp.
+		function exec() {
+			lastExec = Number(new Date());
+			callback.apply(self, args);
+		}
+
+		/*
+   * If `debounceMode` is true (at begin) this is used to clear the flag
+   * to allow future `callback` executions.
+   */
+		function clear() {
+			timeoutID = undefined;
+		}
+
+		if (debounceMode && !timeoutID) {
+			/*
+    * Since `wrapper` is being called for the first time and
+    * `debounceMode` is true (at begin), execute `callback`.
+    */
+			exec();
+		}
+
+		// Clear any existing timeout.
+		if (timeoutID) {
+			clearTimeout(timeoutID);
+		}
+
+		if (debounceMode === undefined && elapsed > delay) {
+			/*
+    * In throttle mode, if `delay` time has been exceeded, execute
+    * `callback`.
+    */
+			exec();
+		} else if (noTrailing !== true) {
+			/*
+    * In trailing throttle mode, since `delay` time has not been
+    * exceeded, schedule `callback` to execute `delay` ms after most
+    * recent execution.
+    *
+    * If `debounceMode` is true (at begin), schedule `clear` to execute
+    * after `delay` ms.
+    *
+    * If `debounceMode` is false (at end), schedule `callback` to
+    * execute after `delay` ms.
+    */
+			timeoutID = setTimeout(debounceMode ? clear : exec, debounceMode === undefined ? delay - elapsed : delay);
+		}
+	}
+
+	// Return the wrapper function.
+	return wrapper;
+}
+
+/* eslint-disable no-undefined */
+
+/**
+ * Debounce execution of a function. Debouncing, unlike throttling,
+ * guarantees that a function is only executed a single time, either at the
+ * very beginning of a series of calls, or at the very end.
+ *
+ * @param  {Number}   delay         A zero-or-greater delay in milliseconds. For event callbacks, values around 100 or 250 (or even higher) are most useful.
+ * @param  {Boolean}  [atBegin]     Optional, defaults to false. If atBegin is false or unspecified, callback will only be executed `delay` milliseconds
+ *                                  after the last debounced-function call. If atBegin is true, callback will be executed only at the first debounced-function call.
+ *                                  (After the throttled-function has not been called for `delay` milliseconds, the internal counter is reset).
+ * @param  {Function} callback      A function to be executed after delay milliseconds. The `this` context and all arguments are passed through, as-is,
+ *                                  to `callback` when the debounced-function is executed.
+ *
+ * @return {Function} A new, debounced function.
+ */
+function debounce(delay, atBegin, callback) {
+	return callback === undefined ? throttle(delay, atBegin, false) : throttle(delay, callback, atBegin !== false);
+}
+
+exports.throttle = throttle;
+exports.debounce = debounce;
+
+/***/ }),
+/* 6 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+var rng = __webpack_require__(13);
+var bytesToUuid = __webpack_require__(14);
+
+function v4(options, buf, offset) {
+  var i = buf && offset || 0;
+
+  if (typeof options == 'string') {
+    buf = options === 'binary' ? new Array(16) : null;
+    options = null;
+  }
+  options = options || {};
+
+  var rnds = options.random || (options.rng || rng)();
+
+  // Per 4.4, set bits for version and `clock_seq_hi_and_reserved`
+  rnds[6] = rnds[6] & 0x0f | 0x40;
+  rnds[8] = rnds[8] & 0x3f | 0x80;
+
+  // Copy bytes to buffer, if provided
+  if (buf) {
+    for (var ii = 0; ii < 16; ++ii) {
+      buf[i + ii] = rnds[ii];
+    }
+  }
+
+  return buf || bytesToUuid(rnds);
+}
+
+module.exports = v4;
+
+/***/ }),
+/* 7 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+var _class = function () {
+  function _class(GameState) {
+    _classCallCheck(this, _class);
+
+    this.GameState = GameState;
+    this.audioNodes = [];
+    this.controlCallbackIds = [];
+  }
+
+  _createClass(_class, [{
+    key: "load",
+    value: function load() {}
+  }, {
+    key: "unload",
+    value: function unload() {
+      var _this = this;
+
+      // Stop audio nodes
+      this.audioNodes.forEach(function (audioNode) {
+        audioNode.stop(0);
+      });
+      this.audioNodes = [];
+
+      // Remove control callbacks
+      this.controlCallbackIds.forEach(function (callbackId) {
+        _this.GameState.Controls.removeCallback(callbackId);
+      });
+      this.controlCallbackIds = [];
+    }
+  }, {
+    key: "addControlsCallback",
+    value: function addControlsCallback(eventKey, callback) {
+      this.controlCallbackIds.push(this.GameState.Controls.addCallback(eventKey, callback));
+    }
+  }, {
+    key: "addAudioNode",
+    value: function addAudioNode(audioNode) {
+      this.audioNodes.push(audioNode);
+      audioNode.load();
+    }
+  }]);
+
+  return _class;
+}();
+
+exports.default = _class;
+
+/***/ }),
 /* 8 */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -841,7 +841,7 @@ Object.defineProperty(exports, "__esModule", {
 
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
-var _throttleDebounce = __webpack_require__(4);
+var _throttleDebounce = __webpack_require__(5);
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
@@ -927,13 +927,13 @@ Object.defineProperty(exports, "__esModule", {
 
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
-var _throttleDebounce = __webpack_require__(4);
+var _throttleDebounce = __webpack_require__(5);
 
 var _controls = __webpack_require__(12);
 
 var _controls2 = _interopRequireDefault(_controls);
 
-var _v = __webpack_require__(5);
+var _v = __webpack_require__(6);
 
 var _v2 = _interopRequireDefault(_v);
 
@@ -1572,6 +1572,10 @@ Object.defineProperty(exports, "__esModule", {
 
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
+var _Cell = __webpack_require__(22);
+
+var _Cell2 = _interopRequireDefault(_Cell);
+
 var _Level2 = __webpack_require__(1);
 
 var _Level3 = _interopRequireDefault(_Level2);
@@ -1583,10 +1587,6 @@ var _randomRange2 = _interopRequireDefault(_randomRange);
 var _Vector = __webpack_require__(0);
 
 var _Vector2 = _interopRequireDefault(_Vector);
-
-var _Cell = __webpack_require__(22);
-
-var _Cell2 = _interopRequireDefault(_Cell);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -1616,10 +1616,10 @@ var _class = function (_Level) {
       this.GameState.Scene.clear();
 
       this.grid = [];
-      this.rows = 8;
+      this.rows = 6;
       this.columns = 6;
       this.minDimension = Math.min(this.GameState.Canvas.width, this.GameState.Canvas.height);
-      this.minimumPadding = 200;
+      this.minimumPadding = 100;
       this.cellSize = (this.minDimension - this.minimumPadding) / this.rows;
       this.padding = new _Vector2.default((this.GameState.Canvas.width - this.cellSize * this.rows) / 2, (this.GameState.Canvas.height - this.cellSize * this.columns) / 2);
       this.hoveredCell = null;
@@ -1628,23 +1628,30 @@ var _class = function (_Level) {
         for (var x = 0; x < this.rows; x++) {
           var cell = new _Cell2.default({
             GameState: this.GameState,
-            strokeStyle: '#ccc',
-            fillStyle: 'white',
-            lineWidth: 2,
-            dimensions: new _Vector2.default(this.cellSize, this.cellSize),
+            offset: new _Vector2.default(0, 0),
+            dimensions: new _Vector2.default(64, 64),
+            animations: {
+              exist: {
+                frames: 1,
+                spriteSheet: './img/examples/tile.png',
+                ticksPerFrame: 4
+              }
+            },
+            scale: new _Vector2.default(this.cellSize / 64, this.cellSize / 64),
             id: x + '_' + y,
             x: x,
             y: y
           });
-          cell.position = new _Vector2.default(x * this.cellSize + this.padding.x, y * this.cellSize + this.padding.y);
+          cell.currentAnimation = 'exist';
+          cell.canvasPosition = new _Vector2.default(x * this.cellSize + this.padding.x, y * this.cellSize + this.padding.y);
 
           this.GameState.Scene.add(cell);
           this.grid.push(cell);
         }
       }
 
-      this.GameState.Scene.gameObjects.forEach(function (cell) {
-        cell.init(_this2.GameState.Scene.gameObjects);
+      this.grid.forEach(function (cell) {
+        cell.init(_this2.grid);
       });
 
       this.addControlsCallback('mouseUp', this.handleClick.bind(this));
@@ -1700,9 +1707,11 @@ Object.defineProperty(exports, "__esModule", {
 
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
-var _Entity2 = __webpack_require__(2);
+var _get = function get(object, property, receiver) { if (object === null) object = Function.prototype; var desc = Object.getOwnPropertyDescriptor(object, property); if (desc === undefined) { var parent = Object.getPrototypeOf(object); if (parent === null) { return undefined; } else { return get(parent, property, receiver); } } else if ("value" in desc) { return desc.value; } else { var getter = desc.get; if (getter === undefined) { return undefined; } return getter.call(receiver); } };
 
-var _Entity3 = _interopRequireDefault(_Entity2);
+var _Sprite2 = __webpack_require__(4);
+
+var _Sprite3 = _interopRequireDefault(_Sprite2);
 
 var _Vector = __webpack_require__(0);
 
@@ -1716,29 +1725,22 @@ function _possibleConstructorReturn(self, call) { if (!self) { throw new Referen
 
 function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
 
-var _class = function (_Entity) {
-  _inherits(_class, _Entity);
+var _class = function (_Sprite) {
+  _inherits(_class, _Sprite);
 
   function _class(config) {
     _classCallCheck(this, _class);
 
     var _this = _possibleConstructorReturn(this, (_class.__proto__ || Object.getPrototypeOf(_class)).call(this, config));
 
-    var strokeStyle = config.strokeStyle,
-        fillStyle = config.fillStyle,
-        lineWidth = config.lineWidth,
-        x = config.x,
+    var x = config.x,
         y = config.y,
         id = config.id;
 
 
-    _this.strokeStyle = strokeStyle;
-    _this.fillStyle = fillStyle;
-    _this.lineWidth = lineWidth;
     _this.x = x;
     _this.y = y;
     _this.id = id;
-    _this.wasMouseDown = false;
 
     _this.neighborPattern = [];
     if (Math.random() > 0.25) _this.neighborPattern.push(0);
@@ -1799,27 +1801,19 @@ var _class = function (_Entity) {
       this.neighbors = this.getNeighbors();
     }
   }, {
-    key: 'drawEntity',
-    value: function drawEntity() {
-      this.drawFill();
+    key: 'draw',
+    value: function draw() {
+      _get(_class.prototype.__proto__ || Object.getPrototypeOf(_class.prototype), 'draw', this).call(this);
       this.drawOutline();
       this.drawPathways();
-    }
-  }, {
-    key: 'drawFill',
-    value: function drawFill() {
-      this.GameState.Canvas.ctx.beginPath();
-      this.GameState.Canvas.ctx.rect(this.position.x, this.position.y, this.dimensions.x, this.dimensions.y);
-      this.GameState.Canvas.ctx.fillStyle = this.fillStyle;
-      this.GameState.Canvas.ctx.fill();
     }
   }, {
     key: 'drawOutline',
     value: function drawOutline() {
       this.GameState.Canvas.ctx.beginPath();
-      this.GameState.Canvas.ctx.lineWidth = this.lineWidth;
-      this.GameState.Canvas.ctx.rect(this.position.x, this.position.y, this.dimensions.x, this.dimensions.y);
-      this.GameState.Canvas.ctx.strokeStyle = this.strokeStyle;
+      this.GameState.Canvas.ctx.lineWidth = 1 * window.devicePixelRatio;
+      this.GameState.Canvas.ctx.strokeStyle = 'rgba(0, 0, 0, 0.3)';
+      this.GameState.Canvas.ctx.rect(0, 0, this.dimensions.x * this.scale.x, this.dimensions.y * this.scale.y);
       this.GameState.Canvas.ctx.stroke();
     }
   }, {
@@ -1827,8 +1821,12 @@ var _class = function (_Entity) {
     value: function drawPathways() {
       var _this3 = this;
 
+      this.GameState.Canvas.ctx.beginPath();
+      this.GameState.Canvas.ctx.lineWidth = 3 * window.devicePixelRatio;
+      this.GameState.Canvas.ctx.strokeStyle = 'rgba(35, 123, 220, 0.75)';
+
       this.neighborPattern.forEach(function (directionId) {
-        var halfWidth = _this3.dimensions.x / 2;
+        var halfWidth = _this3.dimensions.x / 2 * _this3.scale.x;
         var start = new _Vector2.default(_this3.position.x + halfWidth, _this3.position.y + halfWidth);
         var destination = new _Vector2.default(_this3.position.x + halfWidth, _this3.position.y + halfWidth);
         if (directionId === 0) destination.x -= halfWidth;
@@ -1836,18 +1834,16 @@ var _class = function (_Entity) {
         if (directionId === 2) destination.x += halfWidth;
         if (directionId === 3) destination.y += halfWidth;
 
-        _this3.GameState.Canvas.ctx.beginPath();
-        _this3.GameState.Canvas.ctx.lineWidth = 5;
-        _this3.GameState.Canvas.ctx.strokeStyle = 'limegreen';
         _this3.GameState.Canvas.ctx.moveTo(start.x, start.y);
         _this3.GameState.Canvas.ctx.lineTo(destination.x, destination.y);
-        _this3.GameState.Canvas.ctx.stroke();
       });
+
+      this.GameState.Canvas.ctx.stroke();
     }
   }]);
 
   return _class;
-}(_Entity3.default);
+}(_Sprite3.default);
 
 exports.default = _class;
 
@@ -2152,7 +2148,7 @@ Object.defineProperty(exports, "__esModule", {
   value: true
 });
 
-var _Sprite2 = __webpack_require__(7);
+var _Sprite2 = __webpack_require__(4);
 
 var _Sprite3 = _interopRequireDefault(_Sprite2);
 
@@ -2206,7 +2202,7 @@ Object.defineProperty(exports, "__esModule", {
 
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
-var _Sprite2 = __webpack_require__(7);
+var _Sprite2 = __webpack_require__(4);
 
 var _Sprite3 = _interopRequireDefault(_Sprite2);
 
@@ -2462,7 +2458,7 @@ Object.defineProperty(exports, "__esModule", {
 
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
-var _v = __webpack_require__(5);
+var _v = __webpack_require__(6);
 
 var _v2 = _interopRequireDefault(_v);
 
