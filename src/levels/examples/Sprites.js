@@ -5,6 +5,7 @@ import NonLoopingSprite from 'gameObjects/examples/NonLoopingSprite';
 import randomRange      from 'lib/randomRange';
 import RunningMan       from 'gameObjects/examples/RunningMan';
 import Vector2          from 'class/Vector2';
+import SpriteButton     from 'class/SpriteButton';
 
 export default class extends Level {
   constructor(config) {
@@ -20,6 +21,7 @@ export default class extends Level {
     this.addGround();
     this.addCharacter();
     this.addNonLoopingSprite();
+    this.addSpriteButton();
   }
 
   addBGMusic() {
@@ -51,6 +53,19 @@ export default class extends Level {
       scale: new Vector2(10, 10),
     });
     this.GameState.Scene.add(nonlooper);
+  }
+
+  addSpriteButton() {
+    const spriteButton = new SpriteButton({
+      GameState: this.GameState,
+      dimensions: new Vector2(32, 32),
+      scale: new Vector2(3, 3),
+      position: new Vector2(0, 200),
+      mouseDownSprite: './img/examples/downButton.png',
+      mouseUpSprite: './img/examples/upButton.png',
+      callback: () => { alert('clicked a button'); },
+    });
+    this.GameState.Scene.add(spriteButton);
   }
 
   addGround() {
