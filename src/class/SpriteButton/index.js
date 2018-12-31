@@ -44,8 +44,10 @@ export default class extends Sprite {
     return rectContains(
       position,
       new Vector2(
-        this.canvasPosition.x + this.absoluteOffset.x,
-        this.canvasPosition.y + this.absoluteOffset.y,
+        // We multiply by the mirror value again because of how scaling flips the canvasPosition
+        // Still doesn't work right if offset isn't (0.5, 0.5) 🤷
+        this.canvasPosition.x + (this.absoluteOffset.x * (this.mirrorX ? -1 : 1)),
+        this.canvasPosition.y + (this.absoluteOffset.y * (this.mirrorY ? -1 : 1)),
       ),
       new Vector2(
         this.dimensions.x * this.scale.x,
