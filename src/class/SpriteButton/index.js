@@ -44,8 +44,8 @@ export default class extends Sprite {
     return rectContains(
       position,
       new Vector2(
-        this.canvasPosition.x - this.absoluteOffset.x,
-        this.canvasPosition.y - this.absoluteOffset.y,
+        this.canvasPosition.x + this.absoluteOffset.x,
+        this.canvasPosition.y + this.absoluteOffset.y,
       ),
       new Vector2(
         this.dimensions.x * this.scale.x,
