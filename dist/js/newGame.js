@@ -226,7 +226,9 @@ var _class = function (_LoadedEntity) {
 
     var _this = _possibleConstructorReturn(this, (_class.__proto__ || Object.getPrototypeOf(_class)).call(this, config));
 
-    var _config$dimensions = config.dimensions,
+    var _config$alpha = config.alpha,
+        alpha = _config$alpha === undefined ? 1 : _config$alpha,
+        _config$dimensions = config.dimensions,
         dimensions = _config$dimensions === undefined ? new _Vector2.default(100, 100) : _config$dimensions,
         _config$offset = config.offset,
         offset = _config$offset === undefined ? new _Vector2.default(0.5, 0.5) : _config$offset,
@@ -237,6 +239,7 @@ var _class = function (_LoadedEntity) {
 
 
     _this.absoluteOffset = new _Vector2.default();
+    _this.alpha = alpha;
     _this.audioNodes = [];
     _this.canvasPosition = new _Vector2.default();
     _this.controlCallbackIds = [];
@@ -272,11 +275,13 @@ var _class = function (_LoadedEntity) {
       this.GameState.Canvas.ctx.translate(this.canvasPosition.x, this.canvasPosition.y);
       this.GameState.Canvas.ctx.rotate(this.rotation);
       this.GameState.Canvas.ctx.translate(this.absoluteOffset.x, this.absoluteOffset.y);
+      this.GameState.Canvas.ctx.globalAlpha = this.alpha;
 
       this.draw();
 
       // Reset transforms
       this.GameState.Canvas.ctx.setTransform(1, 0, 0, 1, 0, 0);
+      this.GameState.Canvas.ctx.globalAlpha = 1;
     }
   }, {
     key: 'update',

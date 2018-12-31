@@ -11,6 +11,7 @@ export default class extends LoadedEntity {
     super(config);
 
     const {
+      alpha = 1,
       dimensions = new Vector2(100, 100),
       offset = new Vector2(0.5, 0.5),
       position = new Vector2(),
@@ -18,6 +19,7 @@ export default class extends LoadedEntity {
     } = config;
 
     this.absoluteOffset = new Vector2();
+    this.alpha = alpha;
     this.audioNodes = [];
     this.canvasPosition = new Vector2();
     this.controlCallbackIds = [];
@@ -49,11 +51,13 @@ export default class extends LoadedEntity {
     this.GameState.Canvas.ctx.translate(this.canvasPosition.x, this.canvasPosition.y);
     this.GameState.Canvas.ctx.rotate(this.rotation);
     this.GameState.Canvas.ctx.translate(this.absoluteOffset.x, this.absoluteOffset.y);
+    this.GameState.Canvas.ctx.globalAlpha = this.alpha;
 
     this.draw();
 
     // Reset transforms
     this.GameState.Canvas.ctx.setTransform(1, 0, 0, 1, 0, 0);
+    this.GameState.Canvas.ctx.globalAlpha = 1;
   }
 
   update() {
