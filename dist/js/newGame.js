@@ -654,7 +654,9 @@ var _createClass = function () { function defineProperties(target, props) { for 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
 var _class = function () {
-  function _class(GameState) {
+  function _class(_ref) {
+    var GameState = _ref.GameState;
+
     _classCallCheck(this, _class);
 
     this.GameState = GameState;
@@ -685,7 +687,9 @@ var _class = function () {
   }, {
     key: "addControlsCallback",
     value: function addControlsCallback(eventKey, callback) {
-      this.controlCallbackIds.push(this.GameState.Controls.addCallback(eventKey, callback));
+      var order = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : 0;
+
+      this.controlCallbackIds.push(this.GameState.Controls.addCallback(eventKey, callback, order));
     }
   }, {
     key: "addAudioNode",
@@ -968,13 +972,29 @@ var _class = function () {
   _createClass(_class, [{
     key: 'addCallback',
     value: function addCallback(eventKey, callBack) {
+      var order = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : 0;
+
       var newUUID = (0, _v2.default)();
       this.callbacks[eventKey].push({
-        uuid: newUUID,
-        callBack: callBack
+        callBack: callBack,
+        order: order,
+        uuid: newUUID
       });
 
+      this.sortCallbacks();
+
       return newUUID;
+    }
+  }, {
+    key: 'sortCallbacks',
+    value: function sortCallbacks() {
+      var _this = this;
+
+      Object.keys(this.callbacks).forEach(function (eventKey) {
+        _this.callbacks[eventKey].sort(function (a, b) {
+          return a.order - b.order;
+        });
+      });
     }
   }, {
     key: 'clearCallbacks',
@@ -984,10 +1004,10 @@ var _class = function () {
   }, {
     key: 'removeCallback',
     value: function removeCallback(callBackUUID) {
-      var _this = this;
+      var _this2 = this;
 
       Object.keys(this.callbacks).forEach(function (eventKey) {
-        _this.callbacks[eventKey] = _this.callbacks[eventKey].filter(function (callback) {
+        _this2.callbacks[eventKey] = _this2.callbacks[eventKey].filter(function (callback) {
           return callback.uuid !== callBackUUID;
         });
       });
@@ -995,28 +1015,28 @@ var _class = function () {
   }, {
     key: 'init',
     value: function init() {
-      var _this2 = this;
+      var _this3 = this;
 
       // Mouse
       document.addEventListener("mousemove", (0, _throttleDebounce.throttle)(this.debounceValue, function (e) {
-        return _this2.handleMouseMove(e);
+        return _this3.handleMouseMove(e);
       }));
       document.addEventListener("mousedown", function (e) {
-        return _this2.handleMouseDown(e);
+        return _this3.handleMouseDown(e);
       });
       document.addEventListener("mouseup", function (e) {
-        return _this2.handleMouseUp(e);
+        return _this3.handleMouseUp(e);
       });
 
       // Touch
       document.addEventListener('touchmove', (0, _throttleDebounce.throttle)(this.debounceValue, function (e) {
-        return _this2.handleTouchMove(e);
+        return _this3.handleTouchMove(e);
       }));
       document.addEventListener('touchstart', function (e) {
-        return _this2.handleTouchStart(e);
+        return _this3.handleTouchStart(e);
       });
       document.addEventListener("touchend", function (e) {
-        return _this2.handleTouchEnd(e);
+        return _this3.handleTouchEnd(e);
       });
 
       // Keys
@@ -1032,10 +1052,31 @@ var _class = function () {
       this.lastPosition = this.position;
       this.isMouseDown = true;
 
-      this.callbacks['touchStart'].forEach(function (_ref) {
-        var callBack = _ref.callBack;
-        return callBack(e);
-      });
+      var _iteratorNormalCompletion = true;
+      var _didIteratorError = false;
+      var _iteratorError = undefined;
+
+      try {
+        for (var _iterator = this.callbacks['touchStart'][Symbol.iterator](), _step; !(_iteratorNormalCompletion = (_step = _iterator.next()).done); _iteratorNormalCompletion = true) {
+          var entry = _step.value;
+
+          var breakAfterCallback = entry.callBack(e);
+          if (breakAfterCallback) break;
+        }
+      } catch (err) {
+        _didIteratorError = true;
+        _iteratorError = err;
+      } finally {
+        try {
+          if (!_iteratorNormalCompletion && _iterator.return) {
+            _iterator.return();
+          }
+        } finally {
+          if (_didIteratorError) {
+            throw _iteratorError;
+          }
+        }
+      }
     }
   }, {
     key: 'handleTouchEnd',
@@ -1043,20 +1084,63 @@ var _class = function () {
       this.lastPosition = this.position;
       this.isMouseDown = false;
 
-      this.callbacks['touchEnd'].forEach(function (_ref2) {
-        var callBack = _ref2.callBack;
-        return callBack(e);
-      });
+      var _iteratorNormalCompletion2 = true;
+      var _didIteratorError2 = false;
+      var _iteratorError2 = undefined;
+
+      try {
+        for (var _iterator2 = this.callbacks['touchEnd'][Symbol.iterator](), _step2; !(_iteratorNormalCompletion2 = (_step2 = _iterator2.next()).done); _iteratorNormalCompletion2 = true) {
+          var entry = _step2.value;
+
+          var breakAfterCallback = entry.callBack(e);
+          if (breakAfterCallback) break;
+        }
+      } catch (err) {
+        _didIteratorError2 = true;
+        _iteratorError2 = err;
+      } finally {
+        try {
+          if (!_iteratorNormalCompletion2 && _iterator2.return) {
+            _iterator2.return();
+          }
+        } finally {
+          if (_didIteratorError2) {
+            throw _iteratorError2;
+          }
+        }
+      }
     }
   }, {
     key: 'handleTouchMove',
     value: function handleTouchMove(e) {
       e.preventDefault();
       this.setPosition(e);
-      this.callbacks['touchMove'].forEach(function (_ref3) {
-        var callBack = _ref3.callBack;
-        return callBack(e);
-      });
+
+      var _iteratorNormalCompletion3 = true;
+      var _didIteratorError3 = false;
+      var _iteratorError3 = undefined;
+
+      try {
+        for (var _iterator3 = this.callbacks['touchMove'][Symbol.iterator](), _step3; !(_iteratorNormalCompletion3 = (_step3 = _iterator3.next()).done); _iteratorNormalCompletion3 = true) {
+          var entry = _step3.value;
+
+          var breakAfterCallback = entry.callBack(e);
+          if (breakAfterCallback) break;
+        }
+      } catch (err) {
+        _didIteratorError3 = true;
+        _iteratorError3 = err;
+      } finally {
+        try {
+          if (!_iteratorNormalCompletion3 && _iterator3.return) {
+            _iterator3.return();
+          }
+        } finally {
+          if (_didIteratorError3) {
+            throw _iteratorError3;
+          }
+        }
+      }
     }
 
     // -----Mouse-----
@@ -1067,10 +1151,31 @@ var _class = function () {
       this.lastPosition = this.position;
       this.isMouseDown = true;
 
-      this.callbacks['mouseDown'].forEach(function (_ref4) {
-        var callBack = _ref4.callBack;
-        return callBack(e);
-      });
+      var _iteratorNormalCompletion4 = true;
+      var _didIteratorError4 = false;
+      var _iteratorError4 = undefined;
+
+      try {
+        for (var _iterator4 = this.callbacks['mouseDown'][Symbol.iterator](), _step4; !(_iteratorNormalCompletion4 = (_step4 = _iterator4.next()).done); _iteratorNormalCompletion4 = true) {
+          var entry = _step4.value;
+
+          var breakAfterCallback = entry.callBack(e);
+          if (breakAfterCallback) break;
+        }
+      } catch (err) {
+        _didIteratorError4 = true;
+        _iteratorError4 = err;
+      } finally {
+        try {
+          if (!_iteratorNormalCompletion4 && _iterator4.return) {
+            _iterator4.return();
+          }
+        } finally {
+          if (_didIteratorError4) {
+            throw _iteratorError4;
+          }
+        }
+      }
     }
   }, {
     key: 'handleMouseUp',
@@ -1078,19 +1183,62 @@ var _class = function () {
       this.lastPosition = this.position;
       this.isMouseDown = false;
 
-      this.callbacks['mouseUp'].forEach(function (_ref5) {
-        var callBack = _ref5.callBack;
-        return callBack(e);
-      });
+      var _iteratorNormalCompletion5 = true;
+      var _didIteratorError5 = false;
+      var _iteratorError5 = undefined;
+
+      try {
+        for (var _iterator5 = this.callbacks['mouseUp'][Symbol.iterator](), _step5; !(_iteratorNormalCompletion5 = (_step5 = _iterator5.next()).done); _iteratorNormalCompletion5 = true) {
+          var entry = _step5.value;
+
+          var breakAfterCallback = entry.callBack(e);
+          if (breakAfterCallback) break;
+        }
+      } catch (err) {
+        _didIteratorError5 = true;
+        _iteratorError5 = err;
+      } finally {
+        try {
+          if (!_iteratorNormalCompletion5 && _iterator5.return) {
+            _iterator5.return();
+          }
+        } finally {
+          if (_didIteratorError5) {
+            throw _iteratorError5;
+          }
+        }
+      }
     }
   }, {
     key: 'handleMouseMove',
     value: function handleMouseMove(e) {
       this.setPosition(e);
-      this.callbacks['mouseMove'].forEach(function (_ref6) {
-        var callBack = _ref6.callBack;
-        return callBack(e);
-      });
+
+      var _iteratorNormalCompletion6 = true;
+      var _didIteratorError6 = false;
+      var _iteratorError6 = undefined;
+
+      try {
+        for (var _iterator6 = this.callbacks['mouseMove'][Symbol.iterator](), _step6; !(_iteratorNormalCompletion6 = (_step6 = _iterator6.next()).done); _iteratorNormalCompletion6 = true) {
+          var entry = _step6.value;
+
+          var breakAfterCallback = entry.callBack(e);
+          if (breakAfterCallback) break;
+        }
+      } catch (err) {
+        _didIteratorError6 = true;
+        _iteratorError6 = err;
+      } finally {
+        try {
+          if (!_iteratorNormalCompletion6 && _iterator6.return) {
+            _iterator6.return();
+          }
+        } finally {
+          if (_didIteratorError6) {
+            throw _iteratorError6;
+          }
+        }
+      }
     }
 
     // -----Keypresses------
@@ -1100,10 +1248,31 @@ var _class = function () {
     value: function handleKeyDown(e) {
       if (!this.pressedKeys.includes(e.keyCode)) this.pressedKeys.push(e.keyCode);
 
-      this.callbacks['keyDown'].forEach(function (_ref7) {
-        var callBack = _ref7.callBack;
-        return callBack(e);
-      });
+      var _iteratorNormalCompletion7 = true;
+      var _didIteratorError7 = false;
+      var _iteratorError7 = undefined;
+
+      try {
+        for (var _iterator7 = this.callbacks['keyDown'][Symbol.iterator](), _step7; !(_iteratorNormalCompletion7 = (_step7 = _iterator7.next()).done); _iteratorNormalCompletion7 = true) {
+          var entry = _step7.value;
+
+          var breakAfterCallback = entry.callBack(e);
+          if (breakAfterCallback) break;
+        }
+      } catch (err) {
+        _didIteratorError7 = true;
+        _iteratorError7 = err;
+      } finally {
+        try {
+          if (!_iteratorNormalCompletion7 && _iterator7.return) {
+            _iterator7.return();
+          }
+        } finally {
+          if (_didIteratorError7) {
+            throw _iteratorError7;
+          }
+        }
+      }
     }
   }, {
     key: 'handleKeyUp',
@@ -1111,10 +1280,31 @@ var _class = function () {
       var index = this.pressedKeys.indexOf(e.keyCode);
       if (index > -1) this.pressedKeys.splice(index, 1);
 
-      this.callbacks['keyUp'].forEach(function (_ref8) {
-        var callBack = _ref8.callBack;
-        return callBack(e);
-      });
+      var _iteratorNormalCompletion8 = true;
+      var _didIteratorError8 = false;
+      var _iteratorError8 = undefined;
+
+      try {
+        for (var _iterator8 = this.callbacks['keyUp'][Symbol.iterator](), _step8; !(_iteratorNormalCompletion8 = (_step8 = _iterator8.next()).done); _iteratorNormalCompletion8 = true) {
+          var entry = _step8.value;
+
+          var breakAfterCallback = entry.callBack(e);
+          if (breakAfterCallback) break;
+        }
+      } catch (err) {
+        _didIteratorError8 = true;
+        _iteratorError8 = err;
+      } finally {
+        try {
+          if (!_iteratorNormalCompletion8 && _iterator8.return) {
+            _iterator8.return();
+          }
+        } finally {
+          if (_didIteratorError8) {
+            throw _iteratorError8;
+          }
+        }
+      }
     }
   }, {
     key: 'setPosition',
@@ -1286,7 +1476,7 @@ var _class = function () {
       var _this = this;
 
       this.levels = _levels2.default.map(function (level) {
-        var lvl = new level(_this);
+        var lvl = new level({ GameState: _this });
         return lvl;
       });
     }
@@ -2485,15 +2675,20 @@ var _class = function (_Sprite) {
     }
     _this.currentAnimation = 'mouseUp';
 
-    _this.addControlsCallback('mouseDown', _this.handleMouseDown.bind(_this));
-    _this.addControlsCallback('mouseUp', _this.handleMouseUp.bind(_this));
+    _this.addControlsCallback('mouseDown', _this.handleMouseDown.bind(_this), -10 // lower GUI order so it processes first and can break the loop for buttons below
+    );
+    _this.addControlsCallback('mouseUp', _this.handleMouseUp.bind(_this), -10 // lower GUI order so it processes first and can break the loop for buttons below
+    );
     return _this;
   }
 
   _createClass(_class, [{
     key: 'isPositionInButton',
     value: function isPositionInButton(position) {
-      return (0, _rectContains2.default)(position, new _Vector2.default(this.canvasPosition.x - this.absoluteOffset.x, this.canvasPosition.y - this.absoluteOffset.y), new _Vector2.default(this.dimensions.x * this.scale.x, this.dimensions.y * this.scale.y));
+      return (0, _rectContains2.default)(position, new _Vector2.default(
+      // We multiply by the mirror value again because of how scaling flips the canvasPosition
+      // Still doesn't work right if offset isn't (0.5, 0.5) 🤷
+      this.canvasPosition.x + this.absoluteOffset.x * (this.mirrorX ? -1 : 1), this.canvasPosition.y + this.absoluteOffset.y * (this.mirrorY ? -1 : 1)), new _Vector2.default(this.dimensions.x * this.scale.x, this.dimensions.y * this.scale.y));
     }
   }, {
     key: 'handleMouseDown',
@@ -2501,6 +2696,7 @@ var _class = function (_Sprite) {
       if (this.isPositionInButton(this.GameState.Controls.position)) {
         this.currentAnimation = 'mouseDown';
         this.currentFrame = 0;
+        return true;
       }
     }
   }, {
@@ -2511,6 +2707,7 @@ var _class = function (_Sprite) {
 
       if (this.isPositionInButton(this.GameState.Controls.position)) {
         this.callback();
+        return true;
       }
     }
   }]);

@@ -1,5 +1,7 @@
 export default class {
-  constructor(GameState) {
+  constructor({
+    GameState,
+  }) {
     this.GameState = GameState;
     this.audioNodes = [];
     this.controlCallbackIds = [];
@@ -22,9 +24,9 @@ export default class {
     this.controlCallbackIds = [];
   }
 
-  addControlsCallback(eventKey, callback) {
+  addControlsCallback(eventKey, callback, order = 0) {
     this.controlCallbackIds.push(
-      this.GameState.Controls.addCallback(eventKey, callback),
+      this.GameState.Controls.addCallback(eventKey, callback, order),
     );
   }
 

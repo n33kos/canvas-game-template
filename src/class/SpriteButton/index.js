@@ -36,8 +36,16 @@ export default class extends Sprite {
     }
     this.currentAnimation = 'mouseUp';
 
-    this.addControlsCallback('mouseDown', this.handleMouseDown.bind(this));
-    this.addControlsCallback('mouseUp', this.handleMouseUp.bind(this));
+    this.addControlsCallback(
+      'mouseDown',
+      this.handleMouseDown.bind(this),
+      -10, // lower GUI order so it processes first and can break the loop for buttons below
+    );
+    this.addControlsCallback(
+      'mouseUp',
+      this.handleMouseUp.bind(this),
+      -10, // lower GUI order so it processes first and can break the loop for buttons below
+    );
   }
 
   isPositionInButton(position) {
@@ -60,6 +68,7 @@ export default class extends Sprite {
     if (this.isPositionInButton(this.GameState.Controls.position)) {
       this.currentAnimation = 'mouseDown';
       this.currentFrame = 0;
+      return true;
     }
   }
 
@@ -69,6 +78,7 @@ export default class extends Sprite {
 
     if (this.isPositionInButton(this.GameState.Controls.position)) {
       this.callback();
+      return true;
     }
   }
 }
